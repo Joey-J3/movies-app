@@ -6,15 +6,13 @@ class Counter extends React.Component {
     this.state = {
       number: 0,
     };
-    this.increment = this.increment.bind(this);
-    this.decrement = this.decrement.bind(this);
   }
-  increment() {
+  increment = () => {
     this.setState((state) => {
       return { number: ++state.number }
     });
   }
-  decrement() {
+  decrement = () => {
     this.setState((state) => ({ number: --state.number }));
   }
   render() {

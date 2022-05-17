@@ -7,10 +7,8 @@ import homeStyle from './home.module.scss'
 function Home() {
   return (
     <div className={homeStyle.home}>
+      <Counter />
       <form>
-        <div className={homeStyle.counter}>
-          <Counter />
-        </div>
         <div className={homeStyle['theme-toggle']}>
           <ThemeToggle />
         </div>
