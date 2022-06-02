@@ -1,0 +1,25 @@
+.header {
+  width: 100%;
+  background-image: url('/static/Header.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  min-height: 10rem;
+  .logo {
+    position: absolute;
+    top: 1rem;
+    left: 4rem;
+  }
+  .search-button__text, .add-button {
+    text-transform: uppercase;
+  }
+  &__add--button {
+    position: absolute;
+    top: 20px;
+    right: 56px;
+  }
+
+  &__search-box {
+    padding: 100px 10rem 6rem;
+  }
+}

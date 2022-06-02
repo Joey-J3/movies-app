@@ -1,0 +1,42 @@
+@import url(./global.scss);
+
+/* montserrat-regular - latin */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../static/fonts/montserrat-v24-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+       url('../static/fonts/montserrat-v24-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('../static/fonts/montserrat-v24-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('../static/fonts/montserrat-v24-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('../static/fonts/montserrat-v24-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('../static/fonts/montserrat-v24-latin-regular.svg#Montserrat') format('svg'); /* Legacy iOS */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Montserrat, Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 16px;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.controls {
+  margin-right: 10px;
+  border-radius: 4px;
+  background: rgba(50, 50, 50, 0.8);
+  mix-blend-mode: normal;
+  color: #fff;
+}
+
+.placeholder {
+  color: #fff;
+  opacity: .3;
+}
