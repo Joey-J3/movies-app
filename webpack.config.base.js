@@ -4,15 +4,20 @@ const Dotenv = require("dotenv-webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const isDevelopment = process.env.NODE_ENV === "development";
+// const root = path.resolve(__dirname, '..')
 
 module.exports = {
   entry: "./src/index.tsx",
   output: {
     path: path.join(__dirname, "/dist"),
     filename: "index_bundle.js",
+    assetModuleFilename: "static/[contenthash][ext][query]",
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js", "scss"],
+    alias: {
+      "@": path.resolve("src"),
+    },
   },
   module: {
     rules: [
@@ -57,14 +62,28 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.png$/,
+        type: "asset/resource",
+      },
+      {
+        test: /\.svg$/,
+        use: {
+          loader: "svg-url-loader",
+        },
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: "asset/resource",
+      },
     ],
   },
   plugins: [
     new MiniCssExtractPlugin({
       // 与 webpackOptions.output 中的选项相似
       // 所有的选项都是可选的
-      filename: isDevelopment ? "[name].css" : "[name].[hash].css",
-      chunkFilename: isDevelopment ? "[id].css" : "[id].[hash].js",
+      filename: isDevelopment ? "[name].css" : "[name].[contenthash].css",
+      chunkFilename: isDevelopment ? "[id].css" : "[id].[contenthash].js",
     }),
     new HTMLWebpackPlugin({
       template: "./index.html",
