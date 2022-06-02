@@ -1,0 +1,23 @@
+.button {
+  display: inline-block;
+  border: 0;
+  border-radius: 4px;
+  background: rgba(246, 82, 97, 1);
+  color: white;
+  padding: 11px 18px;
+  &--reset {
+    background: transparent;
+    color: #F65261;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #F65261;
+  }
+  &--submit {
+    background: #F65261;
+    color: #fff;
+  }
+  &:hover {
+    cursor: pointer;
+    filter: brightness(1.2);
+  }
+}

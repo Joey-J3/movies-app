@@ -1,0 +1,17 @@
+.form-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  .row-1 {
+    flex: 1;
+  }
+  .row-2 {
+    flex: 2;
+  }
+  .row-3 {
+    flex: 3;
+  }
+  .row-4 {
+    flex: 4;
+  }
+}
