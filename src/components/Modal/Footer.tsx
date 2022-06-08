@@ -1,6 +1,6 @@
 import React, { MouseEventHandler } from "react";
 import Button from "../Button";
-import modalStyle from "./modal.module.scss";
+import modalStyle from "./styles/modal.module.scss";
 
 interface FooterProps {
   submitText: string;

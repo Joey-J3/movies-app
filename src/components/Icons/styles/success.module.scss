@@ -1,0 +1,14 @@
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  --width: 66px;
+}
+
+.success-icon {
+  width: var(--width);
+  height: var(--width);
+  background-color: rgba(246, 82, 97, 1);
+  border: 1px solid rgba(246, 82, 97, 1);
+  border-radius: 50%;
+}
