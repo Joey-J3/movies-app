@@ -1,0 +1,23 @@
+.popup, .popup__content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.popup {
+  color: #fff;
+  font-size: 1em;
+  --margin-width: 14px;
+  &__content {
+    margin-top: var(--margin-width);
+  }
+  &__title {
+    font-style: normal;
+    font-weight: 300;
+    font-size: 2em;
+    height: 1.5em;
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+}

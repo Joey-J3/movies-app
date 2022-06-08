@@ -16,11 +16,14 @@
   "author": "Joe",
   "license": "ISC",
   "dependencies": {
+    "@babel/runtime": "^7.18.3",
+    "clsx": "^1.1.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.17.12",
+    "@babel/plugin-transform-runtime": "^7.18.2",
     "@babel/preset-env": "^7.17.12",
     "@babel/preset-react": "^7.17.12",
     "@babel/preset-typescript": "^7.17.12",

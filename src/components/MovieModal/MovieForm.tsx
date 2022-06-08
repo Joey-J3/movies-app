@@ -1,29 +1,19 @@
+import { Movie } from "@/types";
 import React from "react";
 import Dropdown from "../Dropdown";
 import Input from "../Input";
 
 import movieFormStyle from "./movie-form.module.scss";
 
-interface AddMovieFormInterface {
-  formData: {
-    title: string;
-    release_date: string;
-    movie_url: string;
-    rating: string;
-    genre: {
-      label: string;
-      value: string;
-    };
-    runtime: string;
-    overview: string;
-  };
+interface MovieFormInterface {
+  formData: Partial<Movie>;
   onChange: (value: any, fieldName: string) => any;
 }
 
-const mockGenreOptions = ["genre"];
+const mockGenreOptions = ["genre", "mock1", "mock2"];
 
-function AddMovieForm({ formData, onChange }: AddMovieFormInterface) {
-  const { title, release_date, movie_url, rating, genre, runtime, overview } =
+function MovieForm({ formData, onChange }: MovieFormInterface) {
+  const { title, release_date, url, rating, genre, runtime, overview } =
     formData;
 
   return (
@@ -54,9 +44,9 @@ function AddMovieForm({ formData, onChange }: AddMovieFormInterface) {
             <Input
               label="MOVIE URL"
               id="movie_url"
-              value={movie_url}
+              value={url}
               placeholder={"https://"}
-              onChange={(e) => onChange(e.target.value, "movie_url")}
+              onChange={(e) => onChange(e.target.value, "url")}
             />
           </div>
           <div className={movieFormStyle["row-1"]}>
@@ -74,6 +64,7 @@ function AddMovieForm({ formData, onChange }: AddMovieFormInterface) {
             <label className={movieFormStyle["drop-down__label"]}>GENRE</label>
             <Dropdown
               value={genre}
+              multiple
               options={mockGenreOptions.map((o) => ({ label: o, value: o }))}
               onChange={(value) => onChange(value, "genre")}
               className={"controls"}
@@ -86,7 +77,7 @@ function AddMovieForm({ formData, onChange }: AddMovieFormInterface) {
               id="runtime"
               value={runtime}
               placeholder={"minutes"}
-              onChange={(e) => onChange(e, "runtime")}
+              onChange={(e) => onChange(e.target.value, "runtime")}
             />
           </div>
         </div>
@@ -97,7 +88,7 @@ function AddMovieForm({ formData, onChange }: AddMovieFormInterface) {
             placeholder="Movie description"
             id="overview"
             value={overview}
-            onChange={(e) => onChange(e, "overview")}
+            onChange={(e) => onChange(e.target.value, "overview")}
           />
         </div>
       </form>
@@ -105,4 +96,4 @@ function AddMovieForm({ formData, onChange }: AddMovieFormInterface) {
   );
 }
 
-export default AddMovieForm;
+export default MovieForm;

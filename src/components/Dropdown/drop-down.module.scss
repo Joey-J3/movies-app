@@ -9,7 +9,7 @@
   &__header {
     box-sizing: border-box;
     padding: .4em 1em .4em 1em;
-    margin-right: 1em;
+    margin-right: 2em;
     height: 2em;
     line-height: 1;
     font-weight: 500;
@@ -22,10 +22,11 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: 1em;
+    width: 2em;
     color: #F65261;
     display: flex;
     align-items: center;
+    justify-content: center;
     transition: all .3s ease;
     &--active {
       transform: rotate(180deg);
@@ -38,20 +39,30 @@
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   }
   &__list {
-    padding-left: 1em;
     background-color: rgba(50, 50, 50, 0.948044);
     // border: 2px solid #e5e5e5;
     box-sizing: border-box;
     font-weight: 500;
-    max-height: 5em;
+    max-height: 10em;
     overflow: auto;
     &:first-child {
-      padding-top: .8em;
+      padding-top: 1px;
     }
   }
   &__list-item {
     list-style: none;
-    margin-bottom: .8em;
+    padding: .5em 1em;
+    height: 2em;
+    line-height: 1;
+    margin-bottom: 1px;
+    box-sizing: border-box;
+    &:hover {
+      // filter: brightness(1.5);
+      background-color: rgba(35, 35, 35, 0.948);
+    }
+    &--active {
+      background-color: rgb(25, 25, 25);
+    }
   }
   &:hover {
     cursor: pointer;
