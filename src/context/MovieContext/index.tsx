@@ -4,13 +4,14 @@ import React, { createContext, useReducer } from "react";
 export enum Actions {
   REPLACE = "REPLACE",
   SET_MOVIES = "SET_MOVIES",
+  ADD_MOVIE = "ADD_MOVIE",
   SHOW_MOVIE_DETAIL = "SHOW_MOVIE_DETAIL",
   SHOW_HEADER = "SHOW_HEADER",
 }
 
 export type ActionType = {
   type: keyof typeof Actions;
-  payload: any;
+  payload?: any;
 };
 type MovieContextState = {
   movies: Array<Movie>;
@@ -35,7 +36,7 @@ export const MovieContext = createContext<
 
 export const reducer = (
   state: MovieContextState,
-  action: { type: string; payload: any }
+  action: ActionType
 ): MovieContextState => {
   switch (action.type) {
     case Actions.REPLACE:
@@ -48,6 +49,11 @@ export const reducer = (
         ...state,
         movies: action.payload,
       };
+    case Actions.ADD_MOVIE:
+      return {
+        ...state,
+        movies: [...state.movies, action.payload]
+      }
     case Actions.SHOW_MOVIE_DETAIL:
       return {
         ...state,
@@ -60,6 +66,8 @@ export const reducer = (
       };
   }
 };
+
+export const MovieConsumer = MovieContext.Consumer
 
 interface MovieProviderInterface {
   children: React.ReactNode;

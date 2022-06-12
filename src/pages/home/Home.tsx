@@ -4,7 +4,7 @@ import MovieTable from "@/components/MovieTable";
 import logo from "../../../static/netflixroulette.svg";
 import homeStyle from "./home.module.scss";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import MovieProvider from "@/context/MovieContext";
+import MovieProvider, { MovieConsumer } from "@/context/MovieContext";
 import MovieDetail from "@/components/MovieDetail";
 
 function Home() {
@@ -12,7 +12,9 @@ function Home() {
     <MovieProvider>
       <div className={homeStyle.home}>
         <ErrorBoundary>
-          <Header />
+          <MovieConsumer>
+            { ({ currentMovie, showMovieDetail}) => showMovieDetail ? <MovieDetail movie={currentMovie} /> : <Header />}
+          </MovieConsumer>
         </ErrorBoundary>
         <div className={homeStyle.gap}></div>
         <ErrorBoundary>

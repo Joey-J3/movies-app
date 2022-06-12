@@ -1,9 +1,9 @@
+import { Actions, MovieContext } from "@/context/MovieContext";
 import { Movie } from "@/types";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Modal from "../Modal";
 import Footer from "../Modal/Footer";
 import MovieForm from "./MovieForm";
-import { mockMovieData } from "../../../mock";
 
 interface MovieModalInterface {
   mode?: "add" | "edit";
@@ -28,6 +28,7 @@ function MovieModal({
   visible = false,
   close,
 }: MovieModalInterface) {
+  const { dispatch, movies } = useContext(MovieContext)
   const [formData, setFormData] = useState<Partial<Movie>>(defaultFormData);
 
   useEffect(() => {
@@ -39,18 +40,55 @@ function MovieModal({
   const onChange = (value: any, fieldName: string) => {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
   };
-
-  const submitCallback = async () => {
+  
+  const addMovie = async () => {
     try {
       // Add to database
       await new Promise((resolve, reject) => {
-        mockMovieData.push(formData as Movie);
+        dispatch({
+          type: Actions.ADD_MOVIE,
+          payload: formData
+        })
         resolve(1);
       });
+      close();
     } catch (e) {
       throw new Error(`Fail to submit new movie with error: ${e}`);
-    } finally {
-      close();
+    }
+  }
+
+  const saveMovie = async () => {
+    try {
+      const index = movies.findIndex(m => m.id === movieData.id)
+      if (index > -1) {
+        await new Promise((resolve, reject) => {
+            dispatch({
+            type: Actions.REPLACE,
+            payload: formData
+          })
+          resolve(formData)
+        }).then(() => {
+          const newMovies = [...movies]
+          newMovies.splice(index, 1, formData as Movie)
+          dispatch({
+            type: Actions.SET_MOVIES,
+            payload: newMovies
+          })
+          close();
+        })
+      } else {
+        throw new Error("This movie doesn't exist!")
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const submitCallback = async () => {
+    if (mode === "add") {
+      await addMovie()
+    } else {
+      await saveMovie()
     }
   };
   const resetCallback = () => {

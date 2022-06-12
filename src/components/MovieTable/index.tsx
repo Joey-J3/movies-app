@@ -24,26 +24,18 @@ const mockSortType = [
 
 function MovieTable() {
   const { currentMovie, movies, dispatch } = useContext(MovieContext);
+  const [sortedMovies, setSortedMovies] = useState(movies);
   useEffect(() => {
-    dispatch({
-      type: Actions.SET_MOVIES,
-      payload: mockMovieData,
-    });
+    if (movies.length === 0) {
+      dispatch({
+        type: Actions.SET_MOVIES,
+        payload: mockMovieData,
+      });
+    }
   }, []);
 
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [curSortType, setcurSortType] = useState<string>(mockSortType[0].value);
-  const setCurrentMovie = (movie: Movie) => {
-    dispatch({
-      type: Actions.REPLACE,
-      payload: movie,
-    });
-  };
-  const onClickTab = () => {};
-  const onClickMovieCard = (movie: Movie) => {
-    setCurrentMovie(movie);
-  };
   const onClickMenuItem = (value: string, movie: Movie) => {
     setCurrentMovie(movie);
     if (value === menuItem.EDIT) {
@@ -53,26 +45,36 @@ function MovieTable() {
       setShowPopup(true);
     }
   };
+  const [curSortType, setcurSortType] = useState<string>(mockSortType[0].value);
 
   useEffect(() => {
-    let sortedMovies: Array<Movie>;
+    let sortedArr: Array<Movie>;
     if (curSortType === "release_date") {
-      sortedMovies = movies.sort((a, b) =>
+      sortedArr = movies.sort((a, b) =>
         new Date(a.release_date).getTime() < new Date(b.release_date).getTime()
           ? -1
           : 1
       );
     } else if (curSortType === "rating") {
-      sortedMovies = movies.sort((a, b) => Number(b.rating) - Number(a.rating));
+      sortedArr = movies.sort((a, b) => Number(b.rating) - Number(a.rating));
     }
 
-    useEffect(() => {
-      dispatch({
-        type: Actions.SET_MOVIES,
-        payload: sortedMovies,
-      });
-    }, []);
+    setSortedMovies(sortedArr)
   }, [curSortType, movies]);
+
+  const setCurrentMovie = (movie: Movie) => {
+    dispatch({
+      type: Actions.REPLACE,
+      payload: movie,
+    });
+    dispatch({
+      type: Actions.SHOW_MOVIE_DETAIL
+    })
+  };
+  const onClickTab = () => {};
+  const onClickMovieCard = (movie: Movie) => {
+    setCurrentMovie(movie);
+  };
 
   return (
     <div className={tableStyle["movie-table"]}>
@@ -95,7 +97,7 @@ function MovieTable() {
       </div>
       {/* movie-cards list */}
       <div className={tableStyle["movie-table__content"]}>
-        {movies.map((movie: Movie) => (
+        {sortedMovies.map((movie: Movie) => (
           <div
             className={tableStyle["card-item"]}
             key={movie.title}

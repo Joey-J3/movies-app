@@ -25,9 +25,9 @@ function MovieDetail({ movie }: MovieDetailProps) {
         </div>
         <div className={movieDetailStyle["movie-detail__content"]}>
           <div className={movieDetailStyle["movie-detail__title"]}>
-            <h3>{title}</h3>
+            <h1>{title}</h1>
+            <div className={movieDetailStyle["movie-detail__rate"]}>{rating}</div>
           </div>
-          <div className={movieDetailStyle["movie-detail__rate"]}>{rating}</div>
           <div className={movieDetailStyle["movie-detail__genres"]}>
             {genre.join(" & ")}
           </div>
