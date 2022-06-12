@@ -18,7 +18,7 @@ const defaultFormData: Partial<Movie> = {
   url: "",
   rating: "",
   genre: [],
-  runtime: "",
+  runtime: 0,
   overview: "",
 };
 

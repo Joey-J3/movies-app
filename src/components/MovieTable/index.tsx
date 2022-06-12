@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Tabs from "../Tabs";
 import { mockMovieData } from "../../../mock";
 import MovicCard, { menuItem } from "./MovicCard";
@@ -7,6 +7,7 @@ import MovieModal from "../MovieModal";
 import Popup from "../Modal/Popup";
 import Dropdown, { OptionType } from "../Dropdown";
 import tableStyle from "./table.module.scss";
+import { Actions, MovieContext } from "@/context/MovieContext";
 
 const tabsName = ["all", "documentary", "comedy", "horror", "crime"];
 
@@ -22,12 +23,27 @@ const mockSortType = [
 ];
 
 function MovieTable() {
-  const [movieList, setMovieList] = useState<Array<Movie>>(mockMovieData);
-  const [currentMovie, setCurrentMovie] = useState<Movie>();
+  const { currentMovie, movies, dispatch } = useContext(MovieContext);
+  useEffect(() => {
+    dispatch({
+      type: Actions.SET_MOVIES,
+      payload: mockMovieData,
+    });
+  }, []);
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [curSortType, setcurSortType] = useState<string>(mockSortType[0].value);
+  const setCurrentMovie = (movie: Movie) => {
+    dispatch({
+      type: Actions.REPLACE,
+      payload: movie,
+    });
+  };
   const onClickTab = () => {};
+  const onClickMovieCard = (movie: Movie) => {
+    setCurrentMovie(movie);
+  };
   const onClickMenuItem = (value: string, movie: Movie) => {
     setCurrentMovie(movie);
     if (value === menuItem.EDIT) {
@@ -39,25 +55,24 @@ function MovieTable() {
   };
 
   useEffect(() => {
-    setMovieList(mockMovieData);
-  }, [mockMovieData]);
-
-  useEffect(() => {
-    let sortedMovies;
+    let sortedMovies: Array<Movie>;
     if (curSortType === "release_date") {
-      sortedMovies = movieList.sort((a, b) =>
+      sortedMovies = movies.sort((a, b) =>
         new Date(a.release_date).getTime() < new Date(b.release_date).getTime()
           ? -1
           : 1
       );
     } else if (curSortType === "rating") {
-      sortedMovies = movieList.sort(
-        (a, b) => Number(b.rating) - Number(a.rating)
-      );
+      sortedMovies = movies.sort((a, b) => Number(b.rating) - Number(a.rating));
     }
 
-    setMovieList(sortedMovies);
-  }, [curSortType, movieList]);
+    useEffect(() => {
+      dispatch({
+        type: Actions.SET_MOVIES,
+        payload: sortedMovies,
+      });
+    }, []);
+  }, [curSortType, movies]);
 
   return (
     <div className={tableStyle["movie-table"]}>
@@ -80,8 +95,12 @@ function MovieTable() {
       </div>
       {/* movie-cards list */}
       <div className={tableStyle["movie-table__content"]}>
-        {movieList.map((movie: Movie) => (
-          <div className={tableStyle["card-item"]} key={movie.title}>
+        {movies.map((movie: Movie) => (
+          <div
+            className={tableStyle["card-item"]}
+            key={movie.title}
+            onClick={() => onClickMovieCard(movie)}
+          >
             <MovicCard
               movie={movie}
               onClickMenuItem={(value) => onClickMenuItem(value, movie)}
