@@ -13,7 +13,13 @@ function Home() {
       <div className={homeStyle.home}>
         <ErrorBoundary>
           <MovieConsumer>
-            { ({ currentMovie, showMovieDetail}) => showMovieDetail ? <MovieDetail movie={currentMovie} /> : <Header />}
+            {({ currentMovie, showMovieDetail }) =>
+              showMovieDetail ? (
+                <MovieDetail movie={currentMovie} />
+              ) : (
+                <Header />
+              )
+            }
           </MovieConsumer>
         </ErrorBoundary>
         <div className={homeStyle.gap}></div>

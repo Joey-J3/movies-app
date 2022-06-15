@@ -52,8 +52,8 @@ export const reducer = (
     case Actions.ADD_MOVIE:
       return {
         ...state,
-        movies: [...state.movies, action.payload]
-      }
+        movies: [...state.movies, action.payload],
+      };
     case Actions.SHOW_MOVIE_DETAIL:
       return {
         ...state,
@@ -67,7 +67,7 @@ export const reducer = (
   }
 };
 
-export const MovieConsumer = MovieContext.Consumer
+export const MovieConsumer = MovieContext.Consumer;
 
 interface MovieProviderInterface {
   children: React.ReactNode;

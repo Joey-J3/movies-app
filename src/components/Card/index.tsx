@@ -20,7 +20,17 @@ function Card({
   onClickMenuItem,
 }: CardInterface) {
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const onClickMenuItemWithBlur = (value: string) => {
+  const onClickContextMenu = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    setShowMenu(!showMenu);
+  };
+  const onClickMenuItemWithBlur = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    value: string
+  ) => {
+    e.stopPropagation();
     setShowMenu(false);
     onClickMenuItem(value);
   };
@@ -29,8 +39,11 @@ function Card({
       <div className={cardStyle["card__img"]}>
         <img src={url} alt={title} />
         <div
-          className={cardStyle["card__context-menu"]}
-          onClick={() => setShowMenu(!showMenu)}
+          className={clsx(cardStyle["card__context-menu"], {
+            [cardStyle["card__context-menu--active"]]: showMenu,
+          })}
+          onClick={onClickContextMenu}
+          onBlur={() => setShowMenu(false)}
         >
           <div className={cardStyle["card__context-menu__ovals"]}>
             <div className={cardStyle["oval"]} />
@@ -41,13 +54,12 @@ function Card({
             className={clsx(cardStyle["card__context-menu__list"], {
               [cardStyle["card__context-menu__list--active"]]: showMenu,
             })}
-            onBlur={() => setShowMenu(false)}
           >
             {menuList.map((name, i) => (
               <div
                 key={name + i}
                 className={cardStyle["card__context-menu__list-item"]}
-                onClick={() => onClickMenuItemWithBlur(name)}
+                onClick={(e) => onClickMenuItemWithBlur(e, name)}
               >
                 {name}
               </div>

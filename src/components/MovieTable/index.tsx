@@ -59,7 +59,7 @@ function MovieTable() {
       sortedArr = movies.sort((a, b) => Number(b.rating) - Number(a.rating));
     }
 
-    setSortedMovies(sortedArr)
+    setSortedMovies(sortedArr);
   }, [curSortType, movies]);
 
   const setCurrentMovie = (movie: Movie) => {
@@ -68,8 +68,8 @@ function MovieTable() {
       payload: movie,
     });
     dispatch({
-      type: Actions.SHOW_MOVIE_DETAIL
-    })
+      type: Actions.SHOW_MOVIE_DETAIL,
+    });
   };
   const onClickTab = () => {};
   const onClickMovieCard = (movie: Movie) => {
