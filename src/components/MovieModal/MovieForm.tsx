@@ -1,6 +1,6 @@
 import { Movie } from "@/types";
 import React from "react";
-import Dropdown from "../Dropdown";
+import Dropdown, { OptionType } from "../Dropdown";
 import Input from "../Input";
 
 import movieFormStyle from "./movie-form.module.scss";
@@ -66,7 +66,7 @@ function MovieForm({ formData, onChange }: MovieFormInterface) {
               value={genre}
               multiple
               options={mockGenreOptions.map((o) => ({ label: o, value: o }))}
-              onChange={(value) => onChange(value, "genre")}
+              onChange={(value) => onChange((value as Array<OptionType>).map(i => i.value), "genre")}
               className={"controls"}
               placeholder={"genre"}
             />

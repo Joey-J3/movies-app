@@ -9,6 +9,6 @@ export type Movie = {
   release_date: string;
   rating: string;
   genre: Array<string>;
-  runtime: string;
+  runtime: number;
   overview: string;
 };

@@ -1,3 +1,4 @@
+import { useToggle } from "@/hooks";
 import clsx from "clsx";
 import React, { useState } from "react";
 import dropdownStyle from "./drop-down.module.scss";
@@ -29,15 +30,13 @@ function Dropdown<T extends boolean>({
 }: DropdownProps<T>) {
   const [currentOptions, setCurrentOptions] =
     useState<valueTypeMap<typeof multiple, OptionType>>();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { value: isOpen, toggle, setValue: setIsOpen } = useToggle(false);
 
   const displayValue = !multiple
     ? (currentOptions as OptionType)?.label || ""
     : ((currentOptions as Array<OptionType>) || [])
         .map((o) => o.label)
         .join(",");
-
-  const toggle = () => setIsOpen(!isOpen);
 
   function onOptionClick(
     option: OptionType,

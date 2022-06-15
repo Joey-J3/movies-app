@@ -10,7 +10,7 @@ export const mockMovieData: Array<Movie> = [
     release_date: "2022/2/10",
     rating: "3",
     genre: [],
-    runtime: "",
+    runtime: 123123123,
     overview: "",
   },
   {
@@ -22,7 +22,7 @@ export const mockMovieData: Array<Movie> = [
     release_date: "2021/1/11",
     rating: "4",
     genre: [],
-    runtime: "",
+    runtime: 123123123,
     overview: "",
   },
   {
@@ -34,7 +34,7 @@ export const mockMovieData: Array<Movie> = [
     release_date: "1998/9/10",
     rating: "1",
     genre: [],
-    runtime: "",
+    runtime: 123123123123,
     overview: "",
   },
   {
@@ -46,7 +46,7 @@ export const mockMovieData: Array<Movie> = [
     release_date: "2003/12/11",
     rating: "2",
     genre: [],
-    runtime: "",
+    runtime: 123123123123,
     overview: "",
   },
 ];
