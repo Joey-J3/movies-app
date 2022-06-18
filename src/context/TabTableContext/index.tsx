@@ -1,13 +1,12 @@
 import { Movie } from "@/types";
 import React, { createContext } from "react";
-import { mockMovieData } from "../../../mock";
 
 interface TabTableContextInterface {
   movieData: Array<Movie>;
 }
 
 export const TabTableContext = createContext<TabTableContextInterface>({
-  movieData: mockMovieData,
+  movieData: [],
 });
 
 interface TabTableContextProviderProp {

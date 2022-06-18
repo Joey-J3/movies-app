@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
+import { OptionType } from "@/types";
 import tabsStyle from "./tabs.module.scss";
 
 interface TabsInterface {
-  tabs: Array<any>;
+  activeTab: OptionType;
+  tabs: Array<OptionType>;
   onClickTab: (
     tab: any,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -10,28 +12,19 @@ interface TabsInterface {
   // sortOptions?: Array<OptionType>;
 }
 
-function Tabs({ tabs, onClickTab }: TabsInterface) {
-  const [currentTabIndex, setcurrentTab] = useState(0);
-  const onClickTabFunc = (
-    tab: any,
-    index: number,
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    setcurrentTab(index);
-    onClickTab(tab, e);
-  };
+function Tabs({ activeTab, tabs, onClickTab }: TabsInterface) {
   return (
     <div className={tabsStyle["tab"]}>
       {tabs.map((tab, i) => (
         <div
           key={i}
           className={`${tabsStyle["tab-item"]} text-uppercase ${
-            i === currentTabIndex && tabsStyle["tab-item--active"]
+            tab.value === activeTab.value && tabsStyle["tab-item--active"]
           }`}
           tabIndex={1}
-          onClick={(e) => onClickTabFunc(tab, i, e)}
+          onClick={(e) => onClickTab(tab, e)}
         >
-          {tab}
+          {tab.label}
         </div>
       ))}
     </div>

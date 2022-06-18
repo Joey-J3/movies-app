@@ -1,6 +1,9 @@
 .tab {
+  flex: 6;
   display: flex;
   flex-wrap: nowrap;
+  overflow-x: scroll;
+  margin-right: 10px;
   &-item {
     font-weight: 500;
     font-size: .75em;
@@ -8,6 +11,7 @@
     line-height: 1;
     padding: 1em 0;
     margin-right: 2em;
+    white-space: nowrap;
     &--active {
       border-bottom: 1px solid rgba(246, 82, 97, 1);
     }

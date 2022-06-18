@@ -1,38 +1,85 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Tabs from "../Tabs";
-import { mockMovieData } from "../../../mock";
 import MovicCard, { menuItem } from "./MovicCard";
-import { Movie } from "@/types";
+import { Movie, OptionType } from "@/types";
 import MovieModal from "../MovieModal";
 import Popup from "../Modal/Popup";
-import Dropdown, { OptionType } from "../Dropdown";
+import Dropdown from "../Dropdown";
 import tableStyle from "./table.module.scss";
-import { Actions, MovieContext } from "@/context/MovieContext";
+import { getAllGenres, getAllMovies, moviesAction } from "@/store/movies";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+// const tabsName = [
+//   {
+//     label: "All",
+//     value: "",
+//   },
+//   {
+//     label: "drama",
+//     value: "drama",
+//   },
+//   {
+//     label: "comedy",
+//     value: "comedy",
+//   },
+//   {
+//     label: "fantasy",
+//     value: "fantasy",
+//   },
+//   {
+//     label: "romance",
+//     value: "romance",
+//   },
+//   {
+//     label: "action",
+//     value: "action",
+//   },
+//   {
+//     label: "crime",
+//     value: "crime",
+//   },
+// ];
 
-const tabsName = ["all", "documentary", "comedy", "horror", "crime"];
-
-const mockSortType = [
+const sortType = [
+  {
+    label: "All",
+    value: "",
+  },
   {
     label: "RELEASE DATE",
     value: "release_date",
   },
   {
     label: "RATING",
-    value: "rating",
+    value: "vote_average",
   },
 ];
 
 function MovieTable() {
-  const { currentMovie, movies, dispatch } = useContext(MovieContext);
-  const [sortedMovies, setSortedMovies] = useState(movies);
+  const { movies, genres } = useAppSelector((state) => state.movies);
+  const dispatch = useAppDispatch();
+
+  const tabs = useMemo(
+    () =>
+      [
+        { label: "All", value: "" },
+        ...genres.map((g) => ({ label: g, value: g })),
+      ] as OptionType[],
+    [genres]
+  );
+
+  const [curSortType, setcurSortType] = useState<string>(sortType[0].value);
+  const [curTab, setCurTab] = useState(tabs[0]);
   useEffect(() => {
-    if (movies.length === 0) {
-      dispatch({
-        type: Actions.SET_MOVIES,
-        payload: mockMovieData,
-      });
-    }
-  }, []);
+    // TODO: add params
+    dispatch(
+      getAllMovies({
+        sortBy: curSortType,
+        sortOrder: "asc",
+        filter: curTab.value,
+      })
+    );
+    dispatch(getAllGenres());
+  }, [curSortType, curTab]);
 
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -45,33 +92,15 @@ function MovieTable() {
       setShowPopup(true);
     }
   };
-  const [curSortType, setcurSortType] = useState<string>(mockSortType[0].value);
-
-  useEffect(() => {
-    let sortedArr: Array<Movie>;
-    if (curSortType === "release_date") {
-      sortedArr = movies.sort((a, b) =>
-        new Date(a.release_date).getTime() < new Date(b.release_date).getTime()
-          ? -1
-          : 1
-      );
-    } else if (curSortType === "rating") {
-      sortedArr = movies.sort((a, b) => Number(b.rating) - Number(a.rating));
-    }
-
-    setSortedMovies(sortedArr);
-  }, [curSortType, movies]);
 
   const setCurrentMovie = (movie: Movie) => {
-    dispatch({
-      type: Actions.REPLACE,
-      payload: movie,
-    });
-    dispatch({
-      type: Actions.SHOW_MOVIE_DETAIL,
-    });
+    dispatch(moviesAction.replaceCurrentMovie(movie));
+    dispatch(moviesAction.setShowDetailMode(true));
   };
-  const onClickTab = () => {};
+  const onClickTab = (tab: OptionType) => {
+    // TODO
+    setCurTab(tab);
+  };
   const onClickMovieCard = (movie: Movie) => {
     setCurrentMovie(movie);
   };
@@ -79,13 +108,13 @@ function MovieTable() {
   return (
     <div className={tableStyle["movie-table"]}>
       <div className={tableStyle["movie-table__tab__wrapper"]}>
-        <Tabs tabs={tabsName} onClickTab={onClickTab} />
+        <Tabs activeTab={curTab} tabs={tabs} onClickTab={onClickTab} />
         <div className={tableStyle["filter"]}>
           <p className="text-uppercase">sort by</p>
           <Dropdown
             value={curSortType}
             onChange={(o) => setcurSortType((o as OptionType).value as string)}
-            options={mockSortType}
+            options={sortType}
             className={tableStyle["filter__selector"]}
             placeholder={"Select sort type"}
           />
@@ -97,7 +126,7 @@ function MovieTable() {
       </div>
       {/* movie-cards list */}
       <div className={tableStyle["movie-table__content"]}>
-        {sortedMovies.map((movie: Movie) => (
+        {movies.map((movie: Movie) => (
           <div
             className={tableStyle["card-item"]}
             key={movie.title}
@@ -112,7 +141,6 @@ function MovieTable() {
       </div>
       <MovieModal
         mode="edit"
-        movieData={currentMovie}
         visible={showModal}
         close={() => setShowModal(false)}
       />

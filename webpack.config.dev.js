@@ -7,7 +7,18 @@ module.exports = merge(config, {
   devServer: {
     host: "0.0.0.0",
     port: 8080,
-    hot: false,
+    hot: true,
+    static: "./dist",
     open: false,
+    proxy: {
+      "/api": {
+        secure: false,
+        changeOrigin: true,
+        target: "http://localhost:4000/",
+        proxyTimeout: 300000,
+        timeout: 300000,
+        pathRewrite: { "^/api": "" },
+      },
+    },
   },
 });

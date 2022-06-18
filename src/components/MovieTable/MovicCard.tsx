@@ -15,8 +15,16 @@ type MovieCardProps = {
 const menuList = Object.values(menuItem);
 
 function MovicCard({ movie, onClickMenuItem }: MovieCardProps) {
+  const { poster_path, title, tagline, release_date } = movie;
   return (
-    <Card {...movie} menuList={menuList} onClickMenuItem={onClickMenuItem} />
+    <Card
+      url={poster_path}
+      title={title}
+      subTitle={tagline}
+      release_date={release_date}
+      menuList={menuList}
+      onClickMenuItem={onClickMenuItem}
+    />
   );
 }
 
