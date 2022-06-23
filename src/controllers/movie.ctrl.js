@@ -46,10 +46,18 @@ const updateMovie = async (movie) => {
   return movie
 }
 
+const getAllGenres = async () => {
+  return new Array(...movies.reduce((res, cur) => {
+    cur.genres.forEach(g => res.add(g))
+    return res
+  }, new Set()))
+}
+
 module.exports = {
   getMovies,
   getMovieById,
   deleteMovie,
   addMovie,
   updateMovie,
+  getAllGenres
 }

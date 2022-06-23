@@ -85,4 +85,10 @@ api.put('/movies',
     }
   })
 
+api.get('/movies/genres/all', async (ctx, _next) => {
+  const genres = await movieCtrl.getAllGenres()
+  ctx.body = { genres }
+  ctx.status = 200
+})
+
 module.exports = exports = api
