@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --config webpack.config.dev.js",
+    "start": "concurrently \"npm run dev\" \"npm run start -C ./server\"",
     "test": "npm run test",
     "build": "webpack --config webpack.config.prod.js",
     "lint": "eslint --ext .ts,.tsx --fix src",
@@ -18,6 +19,7 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "clsx": "^1.1.1",
+    "concurrently": "^7.2.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
   },
