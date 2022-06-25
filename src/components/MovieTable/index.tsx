@@ -94,7 +94,7 @@ function MovieTable() {
   };
 
   const setCurrentMovie = (movie: Movie) => {
-    dispatch(moviesAction.replaceCurrentMovie(movie));
+    dispatch(moviesAction.setCurrentMovie(movie));
     dispatch(moviesAction.setShowDetailMode(true));
   };
   const onClickTab = (tab: OptionType) => {

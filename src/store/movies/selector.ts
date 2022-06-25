@@ -1,14 +1,30 @@
+import { createSelector } from "@reduxjs/toolkit";
+
 import { RootState } from "..";
 
-export const selectMovieList = (state: RootState) => state.movies.movies;
+export const selectMovies = (state: RootState) => state.movies;
 
-export const selectLastParams = (state: RootState) =>
-  state.movies.lastSearchParams;
+export const selectMovieList = createSelector(
+  selectMovies,
+  (state) => state.movies
+);
 
-export const selectCurrentMovie = (state: RootState) =>
-  state.movies.currentMovie;
+export const selectLastParams = createSelector(
+  selectMovies,
+  (state) => state.lastSearchParams
+);
 
-export const selectIfShowDetail = (state: RootState) =>
-  state.movies.showMovieDetail;
+export const selectCurrentMovie = createSelector(
+  selectMovies,
+  (state) => state.currentMovie
+);
 
-export const selectGenres = (state: RootState) => state.movies.genres;
+export const selectIfShowDetail = createSelector(
+  selectMovies,
+  (state) => state.showMovieDetail
+);
+
+export const selectGenres = createSelector(
+  selectMovies,
+  (state) => state.genres
+);

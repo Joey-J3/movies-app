@@ -52,7 +52,7 @@ const movieSlice = createSlice({
   name: "movies",
   initialState,
   reducers: {
-    replaceCurrentMovie: (state, action: PayloadAction<Movie>) => {
+    setCurrentMovie: (state, action: PayloadAction<Movie>) => {
       state.currentMovie = action.payload;
     },
     setMovies: (state, action: PayloadAction<Array<Movie>>) => {
