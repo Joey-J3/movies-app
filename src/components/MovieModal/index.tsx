@@ -1,98 +1,74 @@
-import { Actions, MovieContext } from "@/context/MovieContext";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+import { createMovie, getAllMovies, updateMovie } from "@/store/movies";
+import { selectCurrentMovie, selectLastParams } from "@/store/movies/selector";
 import { Movie } from "@/types";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../Modal";
 import Footer from "../Modal/Footer";
 import MovieForm from "./MovieForm";
 
+type Mode = "add" | "edit";
+
 interface MovieModalInterface {
-  mode?: "add" | "edit";
-  movieData?: Movie;
+  mode?: Mode;
   visible: boolean;
   close: () => any;
 }
 
+type MovieDTO<T extends Mode> = T extends "add" ? Omit<Movie, "id"> : Movie;
+
 const defaultFormData: Partial<Movie> = {
   title: "",
   release_date: "",
-  url: "",
-  rating: "",
-  genre: [],
+  poster_path: "",
+  vote_average: 0,
+  genres: [],
   runtime: 0,
   overview: "",
 };
 
 function MovieModal({
   mode = "add",
-  movieData,
   visible = false,
   close,
 }: MovieModalInterface) {
-  const { dispatch, movies } = useContext(MovieContext)
-  const [formData, setFormData] = useState<Partial<Movie>>(defaultFormData);
+  const movie = useAppSelector(selectCurrentMovie);
+  const lastParams = useAppSelector(selectLastParams);
+  const dispatch = useAppDispatch();
+  const [formData, setFormData] = useState<MovieDTO<typeof mode>>();
 
   useEffect(() => {
-    if (mode === "edit" && movieData) {
-      setFormData(movieData);
+    if (mode === "edit") {
+      setFormData(movie);
+    } else {
+      setFormData(defaultFormData as MovieDTO<typeof mode>);
     }
-  }, [mode, movieData]);
+  }, [mode, movie]);
 
-  const onChange = (value: any, fieldName: string) => {
+  function onChange(value: any, fieldName: string) {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
-  };
-  
-  const addMovie = async () => {
-    try {
-      // Add to database
-      await new Promise((resolve, reject) => {
-        dispatch({
-          type: Actions.ADD_MOVIE,
-          payload: formData
-        })
-        resolve(1);
-      });
-      close();
-    } catch (e) {
-      throw new Error(`Fail to submit new movie with error: ${e}`);
-    }
   }
+
+  const addMovie = async () => {
+    dispatch(createMovie(formData));
+    close();
+    dispatch(getAllMovies(lastParams));
+  };
 
   const saveMovie = async () => {
-    try {
-      const index = movies.findIndex(m => m.id === movieData.id)
-      if (index > -1) {
-        await new Promise((resolve, reject) => {
-            dispatch({
-            type: Actions.REPLACE,
-            payload: formData
-          })
-          resolve(formData)
-        }).then(() => {
-          const newMovies = [...movies]
-          newMovies.splice(index, 1, formData as Movie)
-          dispatch({
-            type: Actions.SET_MOVIES,
-            payload: newMovies
-          })
-          close();
-        })
-      } else {
-        throw new Error("This movie doesn't exist!")
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
+    dispatch(updateMovie(formData as Movie));
+    close();
+  };
 
   const submitCallback = async () => {
     if (mode === "add") {
-      await addMovie()
+      await addMovie();
     } else {
-      await saveMovie()
+      await saveMovie();
     }
   };
   const resetCallback = () => {
-    setFormData(defaultFormData);
+    setFormData(defaultFormData as MovieDTO<typeof mode>);
   };
 
   return (

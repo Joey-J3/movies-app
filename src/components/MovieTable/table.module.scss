@@ -13,6 +13,7 @@
     justify-content: space-between;
     align-items: center;
     color: #fff;
+    width: 100%;
   }
   &__count {
     padding: 1.5em 0;
@@ -36,6 +37,7 @@
 }
 
 .filter {
+  flex: 3;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
@@ -52,6 +54,6 @@
   &__selector {
     font-weight: 500;
     opacity: .8;
-    width: 180px;
+    width: 200px;
   }
 }

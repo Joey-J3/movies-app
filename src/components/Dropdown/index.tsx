@@ -1,10 +1,9 @@
 import { useToggle } from "@/hooks";
+import { OptionType } from "@/types";
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dropdownStyle from "./drop-down.module.scss";
 import DropDownList, { DropDownListItem } from "./DropDownList";
-
-export type OptionType = { label: string; value: string | number };
 
 interface DropdownProps<Multi extends boolean> {
   value: valueTypeMap<Multi, string | number>;
@@ -18,10 +17,10 @@ interface DropdownProps<Multi extends boolean> {
   placeholder?: string;
 }
 
-type valueTypeMap<Multi extends boolean, T> = Multi extends true ? Array<T> : T;
+type valueTypeMap<Multi extends boolean, B> = Multi extends true ? Array<B> : B;
 
 function Dropdown<T extends boolean>({
-  value,
+  value: values,
   onChange,
   multiple = false,
   options,
@@ -32,11 +31,23 @@ function Dropdown<T extends boolean>({
     useState<valueTypeMap<typeof multiple, OptionType>>();
   const { value: isOpen, toggle, setValue: setIsOpen } = useToggle(false);
 
+  useEffect(() => {
+    if (!multiple) {
+      setCurrentOptions(options.find((o) => o.value === values));
+    } else {
+      setCurrentOptions(
+        (values as [])
+          .map((v) => options.find((o) => o.value === v))
+          .filter((o) => o)
+      );
+    }
+  }, [values]);
+
   const displayValue = !multiple
     ? (currentOptions as OptionType)?.label || ""
     : ((currentOptions as Array<OptionType>) || [])
         .map((o) => o.label)
-        .join(",");
+        .join(", ");
 
   function onOptionClick(
     option: OptionType,
@@ -48,15 +59,15 @@ function Dropdown<T extends boolean>({
         setIsOpen(false);
         onChange(option, e);
       } else {
-        const values = (currentOptions as Array<OptionType>) || [];
-        const index = values.findIndex((o) => o.value === value);
+        const selectedOps = (currentOptions as Array<OptionType>) || [];
+        const index = selectedOps.findIndex((o) => o.value === selectedOps);
         if (index > -1) {
-          values.splice(index, 1);
+          selectedOps.splice(index, 1);
         } else {
-          values.push(option);
+          selectedOps.push(option);
         }
-        setCurrentOptions(values);
-        onChange(values, e);
+        setCurrentOptions(selectedOps);
+        onChange(selectedOps, e);
       }
     }
   }
@@ -65,8 +76,8 @@ function Dropdown<T extends boolean>({
     if (!multiple) {
       return option.value === (currentOptions as OptionType)?.value;
     } else {
-      const values = (currentOptions as Array<OptionType>) || [];
-      const index = values.findIndex((o) => o.value === option.value);
+      const selectedOps = (currentOptions as Array<OptionType>) || [];
+      const index = selectedOps.findIndex((o) => o.value === option.value);
 
       return index > -1;
     }

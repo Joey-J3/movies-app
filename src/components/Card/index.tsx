@@ -6,7 +6,7 @@ interface CardInterface {
   url: string;
   title: string;
   subTitle: string;
-  publishDate: string;
+  release_date: string;
   menuList?: Array<string>;
   onClickMenuItem?: (value: string) => any;
 }
@@ -15,7 +15,7 @@ function Card({
   url,
   title,
   subTitle,
-  publishDate,
+  release_date: publishDate,
   menuList = [],
   onClickMenuItem,
 }: CardInterface) {

@@ -6,3 +6,9 @@ import App from "./App";
 
 const root = createRoot(document.getElementById("app"));
 root.render(<App />);
+
+// if (module.hot) {
+//   module.hot.accept("./App", () => {
+//     console.log("a module replaced");
+//   });
+// }

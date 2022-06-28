@@ -7,6 +7,7 @@ interface InputInterface {
   id?: string;
   value: string | number | readonly string[];
   onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  inputType?: React.HTMLInputTypeAttribute;
   type?: "input" | "textarea";
 }
 
@@ -16,6 +17,7 @@ function Input({
   id,
   value,
   onChange,
+  inputType = "text",
   type = "input",
 }: InputInterface) {
   return (
@@ -26,6 +28,7 @@ function Input({
           id={id}
           value={value}
           onChange={(e) => onChange(e as React.ChangeEvent<HTMLInputElement>)}
+          type={inputType}
           tabIndex={1}
           placeholder={placeholder}
         />

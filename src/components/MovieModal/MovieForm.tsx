@@ -1,6 +1,8 @@
-import { Movie } from "@/types";
+import { useAppSelector } from "@/hooks";
+import { selectGenres } from "@/store/movies/selector";
+import { Movie, OptionType } from "@/types";
 import React from "react";
-import Dropdown, { OptionType } from "../Dropdown";
+import Dropdown from "../Dropdown";
 import Input from "../Input";
 
 import movieFormStyle from "./movie-form.module.scss";
@@ -10,11 +12,17 @@ interface MovieFormInterface {
   onChange: (value: any, fieldName: string) => any;
 }
 
-const mockGenreOptions = ["genre", "mock1", "mock2"];
-
 function MovieForm({ formData, onChange }: MovieFormInterface) {
-  const { title, release_date, url, rating, genre, runtime, overview } =
-    formData;
+  const genresOption = useAppSelector(selectGenres);
+  const {
+    title,
+    release_date,
+    poster_path,
+    vote_average,
+    genres,
+    runtime,
+    overview,
+  } = formData;
 
   return (
     <div>
@@ -33,6 +41,7 @@ function MovieForm({ formData, onChange }: MovieFormInterface) {
             <Input
               label="RELEASE DATE"
               id="release_date"
+              inputType={"date"}
               value={release_date}
               placeholder={"Select Date"}
               onChange={(e) => onChange(e.target.value, "release_date")}
@@ -44,18 +53,20 @@ function MovieForm({ formData, onChange }: MovieFormInterface) {
             <Input
               label="MOVIE URL"
               id="movie_url"
-              value={url}
+              inputType={"url"}
+              value={poster_path}
               placeholder={"https://"}
-              onChange={(e) => onChange(e.target.value, "url")}
+              onChange={(e) => onChange(e.target.value, "poster_path")}
             />
           </div>
           <div className={movieFormStyle["row-1"]}>
             <Input
               label="RATING"
-              id="rating"
-              value={rating}
+              id="vote_average"
+              value={vote_average}
               placeholder={"7.8"}
-              onChange={(e) => onChange(e.target.value, "rating")}
+              inputType={"number"}
+              onChange={(e) => onChange(Number(e.target.value), "vote_average")}
             />
           </div>
         </div>
@@ -63,10 +74,15 @@ function MovieForm({ formData, onChange }: MovieFormInterface) {
           <div className={movieFormStyle["row-2"]}>
             <label className={movieFormStyle["drop-down__label"]}>GENRE</label>
             <Dropdown
-              value={genre}
+              value={genres}
               multiple
-              options={mockGenreOptions.map((o) => ({ label: o, value: o }))}
-              onChange={(value) => onChange((value as Array<OptionType>).map(i => i.value), "genre")}
+              options={genresOption.map((o) => ({ label: o, value: o }))}
+              onChange={(value) =>
+                onChange(
+                  (value as Array<OptionType>).map((i) => i.value),
+                  "genres"
+                )
+              }
               className={"controls"}
               placeholder={"genre"}
             />
@@ -75,9 +91,10 @@ function MovieForm({ formData, onChange }: MovieFormInterface) {
             <Input
               label="RUNTIME"
               id="runtime"
+              inputType={"number"}
               value={runtime}
               placeholder={"minutes"}
-              onChange={(e) => onChange(e.target.value, "runtime")}
+              onChange={(e) => onChange(Number(e.target.value), "runtime")}
             />
           </div>
         </div>
