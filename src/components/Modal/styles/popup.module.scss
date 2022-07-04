@@ -20,4 +20,15 @@
     line-height: 1;
     letter-spacing: 1px;
   }
+
+  &__footer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 16px;
+    &__button {
+      padding: 0 2px;
+    }
+  }
 }

@@ -4,7 +4,7 @@ import Button from "../Button";
 function AddButton({
   onClick,
 }: {
-  onClick: React.MouseEventHandler<HTMLDivElement>;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
 }) {
   return (
     <Button

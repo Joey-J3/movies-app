@@ -43,3 +43,21 @@ export function put<T extends keyof API["put"]>(
     Object.assign(defaultConfig, config)
   );
 }
+
+export function del<T extends keyof API["delete"]>(
+  url: T,
+  params?: API["delete"][T],
+  config?: AxiosRequestConfig
+) {
+  let newUrl: string = url;
+  for (const matchArr of url.matchAll(/:\w+/g)) {
+    const key = matchArr[0];
+    // const index = matchArr.index;
+    newUrl = newUrl.replace(key, params[key.slice(1)] || "");
+  }
+
+  return http.delete<APIResponse["delete"][T]>(
+    newUrl,
+    Object.assign({ params }, defaultConfig, config)
+  );
+}

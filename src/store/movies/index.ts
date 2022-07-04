@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Movie } from "@/types";
-import { get, post, put } from "@/api";
+import { del, get, post, put } from "@/api";
 import { getAllMoviesType } from "@/types/api";
 
 interface MovieStoreState {
@@ -48,6 +48,13 @@ export const createMovie = createAsyncThunk(
   }
 );
 
+export const deleteMovie = createAsyncThunk(
+  "movies/delete",
+  async (id: number) => {
+    return (await del("/movies/:id", { id })).data;
+  }
+);
+
 const movieSlice = createSlice({
   name: "movies",
   initialState,
@@ -69,6 +76,7 @@ const movieSlice = createSlice({
     builder
       .addCase(getAllMovies.fulfilled, (state, action) => {
         state.movies = action.payload.data;
+        state.lastSearchParams = action.meta.arg;
       })
       .addCase(getAllGenres.fulfilled, (state, action) => {
         state.genres = action.payload;
@@ -78,6 +86,12 @@ const movieSlice = createSlice({
       })
       .addCase(createMovie.fulfilled, (state, action) => {
         state.currentMovie = action.payload;
+      })
+      .addCase(deleteMovie.fulfilled, (state, action) => {
+        if (action.payload > 0 && state.currentMovie?.id === action.meta.arg) {
+          state.currentMovie = null;
+          state.showMovieDetail = false;
+        }
       });
   },
 });

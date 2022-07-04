@@ -2,9 +2,8 @@ import React from "react";
 import inputStyle from "./input.module.scss";
 
 interface InputInterface {
-  label: string;
   placeholder?: string;
-  id?: string;
+  name?: string;
   value: string | number | readonly string[];
   onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   inputType?: React.HTMLInputTypeAttribute;
@@ -12,20 +11,18 @@ interface InputInterface {
 }
 
 function Input({
-  label,
   placeholder,
-  id,
+  name,
   value,
   onChange,
   inputType = "text",
   type = "input",
 }: InputInterface) {
   return (
-    <span className={inputStyle.input}>
-      <label htmlFor={id}>{label}</label>
+    <span className={inputStyle["input-field"]}>
       {type === "input" ? (
         <input
-          id={id}
+          name={name}
           value={value}
           onChange={(e) => onChange(e as React.ChangeEvent<HTMLInputElement>)}
           type={inputType}
@@ -34,7 +31,7 @@ function Input({
         />
       ) : type === "textarea" ? (
         <textarea
-          id={id}
+          name={name}
           value={value}
           onChange={(e) =>
             onChange(e as React.ChangeEvent<HTMLTextAreaElement>)

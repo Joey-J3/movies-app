@@ -5,7 +5,7 @@ interface Button {
   children: ReactNode;
   type?: "reset" | "submit";
   styleObject?: React.CSSProperties;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
 }
 
@@ -18,16 +18,17 @@ function Button({
 }: Button) {
   const style = Object.assign({}, styleObject);
   return (
-    <div
+    <button
       className={`${buttonStyle.button} ${buttonStyle[`button--${type}`]} ${
         className || ""
       }`}
       tabIndex={1}
       style={style}
+      type={type}
       onClick={onClick}
     >
       {children}
-    </div>
+    </button>
   );
 }
 

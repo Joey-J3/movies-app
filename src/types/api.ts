@@ -30,6 +30,11 @@ export interface API {
   post: {
     "/movies": Omit<Movie, "id">;
   };
+  delete: {
+    "/movies/:id": {
+      [key: string]: any;
+    };
+  };
 }
 
 export interface APIResponse {
@@ -49,5 +54,8 @@ export interface APIResponse {
   };
   post: {
     "/movies": Movie;
+  };
+  delete: {
+    "/movies/:id": number;
   };
 }

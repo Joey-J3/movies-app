@@ -1,115 +1,187 @@
+import { useFormik } from "formik";
+import * as yup from "yup";
 import { useAppSelector } from "@/hooks";
 import { selectGenres } from "@/store/movies/selector";
 import { Movie, OptionType } from "@/types";
 import React from "react";
 import Dropdown from "../Dropdown";
 import Input from "../Input";
+import Footer from "../Modal/Footer";
 
 import movieFormStyle from "./movie-form.module.scss";
 
 interface MovieFormInterface {
   formData: Partial<Movie>;
-  onChange: (value: any, fieldName: string) => any;
+  // onChange: (value: any, fieldName: string) => any;
+  submitCallback: (data: Partial<Movie>) => any;
+  resetCallback: () => any;
 }
 
-function MovieForm({ formData, onChange }: MovieFormInterface) {
+function MovieForm({
+  formData,
+  // onChange,
+  submitCallback,
+  resetCallback,
+}: MovieFormInterface) {
   const genresOption = useAppSelector(selectGenres);
+  const validationSchema = yup.object().shape({
+    title: yup.string().required("Title is required!"),
+    release_date: yup
+      .date()
+      .max(new Date(), "Please select a valid release date"),
+    poster_path: yup
+      .string()
+      .url("Please input valid url")
+      .required("Please inpute preview image uri"),
+    vote_average: yup
+      .number()
+      .nullable(true)
+      .positive("Please input a positive number")
+      .max(10, "Cannot bigger than 10"),
+    genres: yup.array().required("Please select at least one genre type"),
+    runtime: yup
+      .number()
+      .nullable(true)
+      .integer("Please input a integer number")
+      .positive("Please input a positive number"),
+    overview: yup
+      .string()
+      .max(500, "Cannot type more than 500 character")
+      .required("Please type overview"),
+  });
+  const formik = useFormik({
+    initialValues: formData,
+    validationSchema,
+    enableReinitialize: true,
+    onSubmit: (values) => {
+      submitCallback(values);
+    },
+  });
+
   const {
-    title,
-    release_date,
-    poster_path,
-    vote_average,
-    genres,
-    runtime,
-    overview,
-  } = formData;
+    errors,
+    values,
+    handleChange,
+    handleSubmit,
+    handleReset,
+    touched,
+    setFieldValue,
+  } = formik;
 
   return (
-    <div>
-      <form className={movieFormStyle["movie-form"]}>
-        <div className={movieFormStyle["form-row"]}>
-          <div className={movieFormStyle["row-2"]}>
-            <Input
-              label="TITLE"
-              id="title"
-              value={title}
-              placeholder={"title"}
-              onChange={(e) => onChange(e.target.value, "title")}
-            />
-          </div>
-          <div className={movieFormStyle["row-1"]}>
-            <Input
-              label="RELEASE DATE"
-              id="release_date"
-              inputType={"date"}
-              value={release_date}
-              placeholder={"Select Date"}
-              onChange={(e) => onChange(e.target.value, "release_date")}
-            />
-          </div>
-        </div>
-        <div className={movieFormStyle["form-row"]}>
-          <div className={movieFormStyle["row-2"]}>
-            <Input
-              label="MOVIE URL"
-              id="movie_url"
-              inputType={"url"}
-              value={poster_path}
-              placeholder={"https://"}
-              onChange={(e) => onChange(e.target.value, "poster_path")}
-            />
-          </div>
-          <div className={movieFormStyle["row-1"]}>
-            <Input
-              label="RATING"
-              id="vote_average"
-              value={vote_average}
-              placeholder={"7.8"}
-              inputType={"number"}
-              onChange={(e) => onChange(Number(e.target.value), "vote_average")}
-            />
-          </div>
-        </div>
-        <div className={movieFormStyle["form-row"]}>
-          <div className={movieFormStyle["row-2"]}>
-            <label className={movieFormStyle["drop-down__label"]}>GENRE</label>
-            <Dropdown
-              value={genres}
-              multiple
-              options={genresOption.map((o) => ({ label: o, value: o }))}
-              onChange={(value) =>
-                onChange(
-                  (value as Array<OptionType>).map((i) => i.value),
-                  "genres"
-                )
-              }
-              className={"controls"}
-              placeholder={"genre"}
-            />
-          </div>
-          <div className={movieFormStyle["row-1"]}>
-            <Input
-              label="RUNTIME"
-              id="runtime"
-              inputType={"number"}
-              value={runtime}
-              placeholder={"minutes"}
-              onChange={(e) => onChange(Number(e.target.value), "runtime")}
-            />
-          </div>
-        </div>
-        <div>
+    <form
+      className={movieFormStyle["movie-form"]}
+      onSubmit={handleSubmit}
+      onReset={handleReset}
+    >
+      <div className={movieFormStyle["form-row"]}>
+        <div className={movieFormStyle["row-2"]}>
+          <label className={movieFormStyle["form-label"]}>TITLE</label>
           <Input
-            type="textarea"
-            label="OVERVIEW"
-            placeholder="Movie description"
-            id="overview"
-            value={overview}
-            onChange={(e) => onChange(e.target.value, "overview")}
+            name="title"
+            value={values.title}
+            placeholder={"title"}
+            onChange={handleChange}
           />
+          <p className={movieFormStyle["form-error"]}>
+            {(touched.title && errors.title) || ""}
+          </p>
         </div>
-      </form>
-    </div>
+        <div className={movieFormStyle["row-1"]}>
+          <label className={movieFormStyle["form-label"]}>RELEASE DATE</label>
+          <Input
+            name="release_date"
+            inputType={"date"}
+            value={values.release_date}
+            placeholder={"Select Date"}
+            onChange={handleChange}
+          />
+          <p className={movieFormStyle["form-error"]}>
+            {(touched.release_date && errors.release_date) || ""}
+          </p>
+        </div>
+      </div>
+      <div className={movieFormStyle["form-row"]}>
+        <div className={movieFormStyle["row-2"]}>
+          <label className={movieFormStyle["form-label"]}>MOVIE URL</label>
+          <Input
+            name="poster_path"
+            inputType={"url"}
+            value={values.poster_path}
+            placeholder={"https://"}
+            onChange={handleChange}
+          />
+          <p className={movieFormStyle["form-error"]}>
+            {(touched.poster_path && errors.poster_path) || ""}
+          </p>
+        </div>
+        <div className={movieFormStyle["row-1"]}>
+          <label className={movieFormStyle["form-label"]}>RATING</label>
+          <Input
+            name="vote_average"
+            value={values.vote_average}
+            placeholder={"7.8"}
+            inputType={"number"}
+            onChange={handleChange}
+          />
+          <p className={movieFormStyle["form-error"]}>
+            {(touched.vote_average && errors.vote_average) || ""}
+          </p>
+        </div>
+      </div>
+      <div className={movieFormStyle["form-row"]}>
+        <div className={movieFormStyle["row-2"]}>
+          <label className={movieFormStyle["form-label"]}>GENRE</label>
+          <Dropdown
+            value={values.genres}
+            multiple
+            options={genresOption.map((o) => ({ label: o, value: o }))}
+            onChange={(v) =>
+              setFieldValue(
+                "genres",
+                (v as OptionType[]).map((v) => v.value)
+              )
+            }
+            className={"controls"}
+            placeholder={"genre"}
+          />
+          <p className={movieFormStyle["form-error"]}>
+            {(touched.genres && errors.genres) || ""}
+          </p>
+        </div>
+        <div className={movieFormStyle["row-1"]}>
+          <label className={movieFormStyle["form-label"]}>RUNTIME</label>
+          <Input
+            name="runtime"
+            inputType={"number"}
+            value={values.runtime}
+            placeholder={"minutes"}
+            onChange={handleChange}
+          />
+          <p className={movieFormStyle["form-error"]}>
+            {(touched.runtime && errors.runtime) || ""}
+          </p>
+        </div>
+      </div>
+      <div>
+        <label className={movieFormStyle["form-label"]}>OVERVIEW</label>
+        <Input
+          type="textarea"
+          placeholder="Movie description"
+          name="overview"
+          value={values.overview}
+          onChange={handleChange}
+        />
+        <p className={movieFormStyle["form-error"]}>
+          {(touched.overview && errors.overview) || ""}
+        </p>
+      </div>
+      <Footer
+        submitText="submit"
+        resetText="reset"
+        cancelCallback={resetCallback}
+      />
+    </form>
   );
 }
 

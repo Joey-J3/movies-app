@@ -4,7 +4,6 @@ import { selectCurrentMovie, selectLastParams } from "@/store/movies/selector";
 import { Movie } from "@/types";
 import React, { useEffect, useState } from "react";
 import Modal from "../Modal";
-import Footer from "../Modal/Footer";
 import MovieForm from "./MovieForm";
 
 type Mode = "add" | "edit";
@@ -38,54 +37,43 @@ function MovieModal({
   const [formData, setFormData] = useState<MovieDTO<typeof mode>>();
 
   useEffect(() => {
+    const defaultValue = defaultFormData as MovieDTO<typeof mode>;
     if (mode === "edit") {
-      setFormData(movie);
+      setFormData(movie || defaultValue);
     } else {
-      setFormData(defaultFormData as MovieDTO<typeof mode>);
+      setFormData(defaultValue);
     }
   }, [mode, movie]);
 
-  function onChange(value: any, fieldName: string) {
-    setFormData((prev) => ({ ...prev, [fieldName]: value }));
-  }
-
-  const addMovie = async () => {
-    dispatch(createMovie(formData));
-    close();
-    dispatch(getAllMovies(lastParams));
-  };
-
-  const saveMovie = async () => {
-    dispatch(updateMovie(formData as Movie));
+  const addMovie = async (data: Omit<Movie, "id">) => {
+    dispatch(createMovie(data));
     close();
   };
 
-  const submitCallback = async () => {
+  const saveMovie = async (data: Movie) => {
+    dispatch(updateMovie(data));
+    close();
+  };
+
+  const submitCallback = async (data: Partial<Movie>) => {
     if (mode === "add") {
-      await addMovie();
+      await addMovie(data as Omit<Movie, "id">);
     } else {
-      await saveMovie();
+      await saveMovie(data as Movie);
     }
+    dispatch(getAllMovies(lastParams));
   };
   const resetCallback = () => {
     setFormData(defaultFormData as MovieDTO<typeof mode>);
   };
 
   return (
-    <Modal
-      title={`${mode} movie`}
-      visible={visible}
-      closeCallback={close}
-      footer={
-        <Footer
-          submitText="submit"
-          resetText="reset"
-          confirmCallback={() => submitCallback()}
-          cancelCallback={resetCallback}
-        />
-      }
-    >
-      <MovieForm formData={formData} onChange={onChange} />
+    <Modal title={`${mode} movie`} visible={visible} closeCallback={close}>
+      <MovieForm
+        formData={formData}
+        submitCallback={submitCallback}
+        resetCallback={resetCallback}
+      />
     </Modal>
   );
 }
