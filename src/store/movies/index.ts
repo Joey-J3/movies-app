@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Movie } from "@/types";
+import { Movie, MovieDTO } from "@/types";
 import { del, get, post, put } from "@/api";
 import { getAllMoviesType } from "@/types/api";
+
+type MovieModalMode = "ADD" | "EDIT";
 
 interface MovieStoreState {
   movies: Array<Movie>;
@@ -9,7 +11,21 @@ interface MovieStoreState {
   genres: Array<string>;
   showMovieDetail: boolean;
   lastSearchParams: getAllMoviesType;
+  movieModal: {
+    formData: MovieDTO;
+    mode: MovieModalMode;
+    visible: boolean;
+  };
 }
+export const defaultFormData: MovieDTO = {
+  title: "",
+  release_date: "",
+  poster_path: "",
+  vote_average: null,
+  genres: [],
+  runtime: null,
+  overview: "",
+};
 
 const initialState: MovieStoreState = {
   movies: [],
@@ -17,6 +33,11 @@ const initialState: MovieStoreState = {
   genres: [],
   showMovieDetail: false,
   lastSearchParams: {},
+  movieModal: {
+    formData: defaultFormData,
+    mode: "ADD",
+    visible: false,
+  },
 };
 
 export const getAllMovies = createAsyncThunk(
@@ -50,8 +71,12 @@ export const createMovie = createAsyncThunk(
 
 export const deleteMovie = createAsyncThunk(
   "movies/delete",
-  async (id: number) => {
-    return (await del("/movies/:id", { id })).data;
+  async (id: number, { rejectWithValue }) => {
+    try {
+      return (await del("/movies/:id", { id })).data;
+    } catch (error) {
+      rejectWithValue(error);
+    }
   }
 );
 
@@ -70,6 +95,19 @@ const movieSlice = createSlice({
     },
     setShowDetailMode: (state, action: PayloadAction<boolean>) => {
       state.showMovieDetail = action.payload;
+    },
+    showMovieDetail: (state, action) => {
+      state.currentMovie = action.payload;
+      state.showMovieDetail = true;
+    },
+    setFormData: (state, action: PayloadAction<MovieDTO>) => {
+      state.movieModal.formData = action.payload;
+    },
+    setMovieModalMode: (state, action: PayloadAction<MovieModalMode>) => {
+      state.movieModal.mode = action.payload;
+    },
+    setVisible: (state, action: PayloadAction<boolean>) => {
+      state.movieModal.visible = action.payload;
     },
   },
   extraReducers: (builder) => {

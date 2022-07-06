@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { useAppSelector } from "@/hooks";
 import { selectGenres } from "@/store/movies/selector";
-import { Movie, OptionType } from "@/types";
+import { MovieDTO, OptionType } from "@/types";
 import React from "react";
 import Dropdown from "../Dropdown";
 import Input from "../Input";
@@ -11,9 +11,9 @@ import Footer from "../Modal/Footer";
 import movieFormStyle from "./movie-form.module.scss";
 
 interface MovieFormInterface {
-  formData: Partial<Movie>;
+  formData: MovieDTO;
   // onChange: (value: any, fieldName: string) => any;
-  submitCallback: (data: Partial<Movie>) => any;
+  submitCallback: (data: MovieDTO) => any;
   resetCallback: () => any;
 }
 

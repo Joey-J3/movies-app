@@ -10,7 +10,6 @@ import style from "./styles/popup.module.scss";
 interface PopupProps {
   visible: boolean;
   close: React.MouseEventHandler;
-  showIcon?: boolean;
   type?: "success";
   title?: string;
   subTitle?: string;
@@ -24,8 +23,7 @@ const IconMap = {
 function Popup({
   visible = false,
   close,
-  showIcon = false,
-  type = "success",
+  type,
   title = "SUCCESS",
   subTitle,
   footer,
@@ -35,7 +33,7 @@ function Popup({
     <Modal visible={visible} closeCallback={close} size="small">
       <div className={style["popup"]}>
         {/* <div className={style["popup__icon"]}> */}
-        {showIcon && <Icon />}
+        {Icon && <Icon />}
         {/* </div> */}
         <div className={style["popup__content"]}>
           {title && <div className={style["popup__title"]}>{title}</div>}

@@ -28,3 +28,23 @@ export const selectGenres = createSelector(
   selectMovies,
   (state) => state.genres
 );
+
+export const selectMovieModal = createSelector(
+  selectMovies,
+  (state) => state.movieModal
+);
+
+export const selectFormData = createSelector(
+  selectMovieModal,
+  (state) => state.formData
+);
+
+export const selectMovieModalMode = createSelector(
+  selectMovieModal,
+  (state) => state.mode
+);
+
+export const selectMovieModalVisible = createSelector(
+  selectMovieModal,
+  (state) => state.visible
+);

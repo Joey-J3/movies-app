@@ -14,6 +14,7 @@ import {
 } from "@/store/movies";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import Button from "../Button";
+import { selectMovieModalVisible } from "@/store/movies/selector";
 // const tabsName = [
 //   {
 //     label: "All",
@@ -89,7 +90,7 @@ function MovieTable() {
     dispatch(getAllGenres());
   }, [curSortType, curTab]);
 
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const showModal = useAppSelector(selectMovieModalVisible);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const onClickDelete = () => {
@@ -100,9 +101,8 @@ function MovieTable() {
   const onClickMenuItem = (value: string, movie: Movie) => {
     dispatch(moviesAction.setCurrentMovie(movie));
     if (value === menuItem.EDIT) {
-      setShowModal(true);
+      dispatch(moviesAction.setVisible(true));
     } else if (value === menuItem.DELETE) {
-      // show del modal
       setShowDeleteModal(true);
     }
   };
@@ -111,8 +111,7 @@ function MovieTable() {
     setCurTab(tab);
   };
   const onClickMovieCard = (movie: Movie) => {
-    dispatch(moviesAction.setCurrentMovie(movie));
-    dispatch(moviesAction.setShowDetailMode(true));
+    dispatch(moviesAction.showMovieDetail(movie));
   };
 
   return (
@@ -150,9 +149,8 @@ function MovieTable() {
         ))}
       </div>
       <MovieModal
-        mode="edit"
         visible={showModal}
-        close={() => setShowModal(false)}
+        close={() => dispatch(moviesAction.setVisible(false))}
       />
       <Popup
         visible={showDeleteModal}
@@ -169,7 +167,7 @@ function MovieTable() {
         visible={showPopup}
         close={() => setShowPopup(false)}
         title={"CONGRATULATIONS !"}
-        showIcon={true}
+        type="success"
         subTitle={"The movie has been added to database successfully"}
       />
     </div>
