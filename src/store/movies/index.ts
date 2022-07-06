@@ -21,9 +21,9 @@ export const defaultFormData: MovieDTO = {
   title: "",
   release_date: "",
   poster_path: "",
-  vote_average: null,
+  vote_average: "",
   genres: [],
-  runtime: null,
+  runtime: "",
   overview: "",
 };
 
@@ -103,11 +103,12 @@ const movieSlice = createSlice({
     setFormData: (state, action: PayloadAction<MovieDTO>) => {
       state.movieModal.formData = action.payload;
     },
-    setMovieModalMode: (state, action: PayloadAction<MovieModalMode>) => {
-      state.movieModal.mode = action.payload;
-    },
-    setVisible: (state, action: PayloadAction<boolean>) => {
-      state.movieModal.visible = action.payload;
+    setVisible: (
+      state,
+      action: PayloadAction<{ visible: boolean; mode?: MovieModalMode }>
+    ) => {
+      state.movieModal.visible = action.payload.visible;
+      state.movieModal.mode = action.payload.mode;
     },
   },
   extraReducers: (builder) => {
@@ -121,9 +122,11 @@ const movieSlice = createSlice({
       })
       .addCase(updateMovie.fulfilled, (state, action) => {
         state.currentMovie = action.payload;
+        state.movieModal.visible = false;
       })
       .addCase(createMovie.fulfilled, (state, action) => {
         state.currentMovie = action.payload;
+        state.movieModal.visible = false;
       })
       .addCase(deleteMovie.fulfilled, (state, action) => {
         if (action.payload > 0 && state.currentMovie?.id === action.meta.arg) {

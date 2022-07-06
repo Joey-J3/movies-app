@@ -19,7 +19,6 @@ interface MovieFormInterface {
 
 function MovieForm({
   formData,
-  // onChange,
   submitCallback,
   resetCallback,
 }: MovieFormInterface) {
@@ -38,7 +37,7 @@ function MovieForm({
       .nullable(true)
       .positive("Please input a positive number")
       .max(10, "Cannot bigger than 10"),
-    genres: yup.array().required("Please select at least one genre type"),
+    genres: yup.array().min(1, "Please select at least one genre type"),
     runtime: yup
       .number()
       .nullable(true)

@@ -11,22 +11,19 @@ import {
   selectFormData,
   selectLastParams,
   selectMovieModalMode,
+  selectMovieModalVisible,
 } from "@/store/movies/selector";
 import { Movie, MovieDTO } from "@/types";
 import React, { useEffect } from "react";
 import Modal from "../Modal";
 import MovieForm from "./MovieForm";
 
-interface MovieModalInterface {
-  visible: boolean;
-  close: () => any;
-}
-
-function MovieModal({ visible = false, close }: MovieModalInterface) {
+function MovieModal() {
   const movie = useAppSelector(selectCurrentMovie);
   const lastParams = useAppSelector(selectLastParams);
   const formData = useAppSelector(selectFormData);
   const mode = useAppSelector(selectMovieModalMode);
+  const visible = useAppSelector(selectMovieModalVisible);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -39,12 +36,10 @@ function MovieModal({ visible = false, close }: MovieModalInterface) {
 
   const addMovie = async (data: MovieDTO) => {
     dispatch(createMovie(data));
-    close();
   };
 
   const saveMovie = async (data: Movie) => {
     dispatch(updateMovie(data));
-    close();
   };
 
   const submitCallback = async (data: MovieDTO) => {
@@ -60,7 +55,13 @@ function MovieModal({ visible = false, close }: MovieModalInterface) {
   };
 
   return (
-    <Modal title={`${mode} movie`} visible={visible} closeCallback={close}>
+    <Modal
+      title={`${mode} movie`}
+      visible={visible}
+      closeCallback={() =>
+        dispatch(moviesAction.setVisible({ visible: false }))
+      }
+    >
       <MovieForm
         formData={formData}
         submitCallback={submitCallback}

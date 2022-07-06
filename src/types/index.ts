@@ -6,10 +6,10 @@ export interface MovieDTO {
   title: string;
   poster_path: string;
   genres: Array<string>;
-  runtime: number;
+  runtime: number | "";
   overview: string;
   release_date?: string;
-  vote_average?: number;
+  vote_average?: number | "";
 }
 export interface Movie extends MovieDTO {
   id: number;

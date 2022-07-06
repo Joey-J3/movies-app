@@ -14,7 +14,6 @@ import {
 } from "@/store/movies";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import Button from "../Button";
-import { selectMovieModalVisible } from "@/store/movies/selector";
 // const tabsName = [
 //   {
 //     label: "All",
@@ -90,7 +89,6 @@ function MovieTable() {
     dispatch(getAllGenres());
   }, [curSortType, curTab]);
 
-  const showModal = useAppSelector(selectMovieModalVisible);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const onClickDelete = () => {
@@ -101,7 +99,7 @@ function MovieTable() {
   const onClickMenuItem = (value: string, movie: Movie) => {
     dispatch(moviesAction.setCurrentMovie(movie));
     if (value === menuItem.EDIT) {
-      dispatch(moviesAction.setVisible(true));
+      dispatch(moviesAction.setVisible({ visible: true, mode: "EDIT" }));
     } else if (value === menuItem.DELETE) {
       setShowDeleteModal(true);
     }
@@ -148,10 +146,7 @@ function MovieTable() {
           </div>
         ))}
       </div>
-      <MovieModal
-        visible={showModal}
-        close={() => dispatch(moviesAction.setVisible(false))}
-      />
+      <MovieModal />
       <Popup
         visible={showDeleteModal}
         close={() => setShowDeleteModal(false)}
