@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import logo from "../../../static/netflixroulette.svg";
-import MovieModal from "../MovieModal";
 import ErrorBoundary from "../ErrorBoundary";
 import AddButton from "./AddButton";
 import SearchBox from "./SearchBox";
@@ -31,7 +30,6 @@ function Header() {
       <ErrorBoundary>
         <div className={headerStyle["header__add--button"]}>
           <AddButton onClick={onClickAdd} />
-          <MovieModal />
         </div>
         <div className={headerStyle["header__search-box"]}>
           <SearchBox

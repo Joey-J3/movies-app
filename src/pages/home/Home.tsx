@@ -4,7 +4,6 @@ import MovieTable from "@/components/MovieTable";
 import logo from "../../../static/netflixroulette.svg";
 import homeStyle from "./home.module.scss";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import MovieProvider, { MovieConsumer } from "@/context/MovieContext";
 import MovieDetail from "@/components/MovieDetail";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import {
@@ -12,6 +11,7 @@ import {
   selectIfShowDetail,
 } from "@/store/movies/selector";
 import { moviesAction } from "@/store/movies";
+import MovieModal from "@/components/MovieModal";
 
 function Home() {
   const showDetail = useAppSelector(selectIfShowDetail);
@@ -22,6 +22,7 @@ function Home() {
   };
   return (
     <div className={homeStyle.home}>
+      <MovieModal />
       <ErrorBoundary>
         {showDetail ? (
           <MovieDetail movie={currentMovie} onClickSearch={backToSearch} />

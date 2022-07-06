@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import Tabs from "../Tabs";
 import MovicCard, { menuItem } from "./MovicCard";
 import { Movie, OptionType } from "@/types";
-import MovieModal from "../MovieModal";
 import Popup from "../Modal/Popup";
 import Dropdown from "../Dropdown";
 import tableStyle from "./table.module.scss";
@@ -146,7 +145,6 @@ function MovieTable() {
           </div>
         ))}
       </div>
-      <MovieModal />
       <Popup
         visible={showDeleteModal}
         close={() => setShowDeleteModal(false)}
