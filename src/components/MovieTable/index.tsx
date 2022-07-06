@@ -2,12 +2,17 @@ import React, { useEffect, useMemo, useState } from "react";
 import Tabs from "../Tabs";
 import MovicCard, { menuItem } from "./MovicCard";
 import { Movie, OptionType } from "@/types";
-import MovieModal from "../MovieModal";
 import Popup from "../Modal/Popup";
 import Dropdown from "../Dropdown";
 import tableStyle from "./table.module.scss";
-import { getAllGenres, getAllMovies, moviesAction } from "@/store/movies";
+import {
+  deleteMovie,
+  getAllGenres,
+  getAllMovies,
+  moviesAction,
+} from "@/store/movies";
 import { useAppDispatch, useAppSelector } from "@/hooks";
+import Button from "../Button";
 // const tabsName = [
 //   {
 //     label: "All",
@@ -55,7 +60,9 @@ const sortType = [
 ];
 
 function MovieTable() {
-  const { movies, genres } = useAppSelector((state) => state.movies);
+  const { movies, genres, currentMovie } = useAppSelector(
+    (state) => state.movies
+  );
   const dispatch = useAppDispatch();
 
   const tabs = useMemo(
@@ -81,28 +88,27 @@ function MovieTable() {
     dispatch(getAllGenres());
   }, [curSortType, curTab]);
 
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
+  const onClickDelete = () => {
+    dispatch(deleteMovie(currentMovie.id));
+    setShowDeleteModal(false);
+    setShowPopup(true);
+  };
   const onClickMenuItem = (value: string, movie: Movie) => {
-    setCurrentMovie(movie);
+    dispatch(moviesAction.setCurrentMovie(movie));
     if (value === menuItem.EDIT) {
-      setShowModal(true);
+      dispatch(moviesAction.setVisible({ visible: true, mode: "EDIT" }));
     } else if (value === menuItem.DELETE) {
-      // show del modal
-      setShowPopup(true);
+      setShowDeleteModal(true);
     }
   };
 
-  const setCurrentMovie = (movie: Movie) => {
-    dispatch(moviesAction.setCurrentMovie(movie));
-    dispatch(moviesAction.setShowDetailMode(true));
-  };
   const onClickTab = (tab: OptionType) => {
-    // TODO
     setCurTab(tab);
   };
   const onClickMovieCard = (movie: Movie) => {
-    setCurrentMovie(movie);
+    dispatch(moviesAction.showMovieDetail(movie));
   };
 
   return (
@@ -139,15 +145,22 @@ function MovieTable() {
           </div>
         ))}
       </div>
-      <MovieModal
-        mode="edit"
-        visible={showModal}
-        close={() => setShowModal(false)}
+      <Popup
+        visible={showDeleteModal}
+        close={() => setShowDeleteModal(false)}
+        title={"DELETE MOVIE"}
+        subTitle={"Are you sure you want to delete this movie?"}
+        footer={
+          <Button type="submit" onClick={onClickDelete}>
+            CONFIRM
+          </Button>
+        }
       />
       <Popup
         visible={showPopup}
         close={() => setShowPopup(false)}
         title={"CONGRATULATIONS !"}
+        type="success"
         subTitle={"The movie has been added to database successfully"}
       />
     </div>

@@ -1,12 +1,12 @@
-import React, { MouseEventHandler } from "react";
+import React from "react";
 import Button from "../Button";
 import modalStyle from "./styles/modal.module.scss";
 
 interface FooterProps {
   submitText: string;
   resetText: string;
-  confirmCallback: MouseEventHandler;
-  cancelCallback: MouseEventHandler;
+  confirmCallback?: React.EventHandler<any>;
+  cancelCallback?: React.EventHandler<any>;
 }
 
 function Footer({

@@ -1,91 +1,72 @@
 import { useAppDispatch, useAppSelector } from "@/hooks";
-import { createMovie, getAllMovies, updateMovie } from "@/store/movies";
-import { selectCurrentMovie, selectLastParams } from "@/store/movies/selector";
-import { Movie } from "@/types";
-import React, { useEffect, useState } from "react";
+import {
+  createMovie,
+  defaultFormData,
+  getAllMovies,
+  moviesAction,
+  updateMovie,
+} from "@/store/movies";
+import {
+  selectCurrentMovie,
+  selectFormData,
+  selectLastParams,
+  selectMovieModalMode,
+  selectMovieModalVisible,
+} from "@/store/movies/selector";
+import { Movie, MovieDTO } from "@/types";
+import React, { useEffect } from "react";
 import Modal from "../Modal";
-import Footer from "../Modal/Footer";
 import MovieForm from "./MovieForm";
 
-type Mode = "add" | "edit";
-
-interface MovieModalInterface {
-  mode?: Mode;
-  visible: boolean;
-  close: () => any;
-}
-
-type MovieDTO<T extends Mode> = T extends "add" ? Omit<Movie, "id"> : Movie;
-
-const defaultFormData: Partial<Movie> = {
-  title: "",
-  release_date: "",
-  poster_path: "",
-  vote_average: 0,
-  genres: [],
-  runtime: 0,
-  overview: "",
-};
-
-function MovieModal({
-  mode = "add",
-  visible = false,
-  close,
-}: MovieModalInterface) {
+function MovieModal() {
   const movie = useAppSelector(selectCurrentMovie);
   const lastParams = useAppSelector(selectLastParams);
+  const formData = useAppSelector(selectFormData);
+  const mode = useAppSelector(selectMovieModalMode);
+  const visible = useAppSelector(selectMovieModalVisible);
   const dispatch = useAppDispatch();
-  const [formData, setFormData] = useState<MovieDTO<typeof mode>>();
 
   useEffect(() => {
-    if (mode === "edit") {
-      setFormData(movie);
+    if (mode === "EDIT") {
+      dispatch(moviesAction.setFormData(movie || defaultFormData));
     } else {
-      setFormData(defaultFormData as MovieDTO<typeof mode>);
+      dispatch(moviesAction.setFormData(defaultFormData));
     }
   }, [mode, movie]);
 
-  function onChange(value: any, fieldName: string) {
-    setFormData((prev) => ({ ...prev, [fieldName]: value }));
-  }
+  const addMovie = async (data: MovieDTO) => {
+    dispatch(createMovie(data));
+  };
 
-  const addMovie = async () => {
-    dispatch(createMovie(formData));
-    close();
+  const saveMovie = async (data: Movie) => {
+    dispatch(updateMovie(data));
+  };
+
+  const submitCallback = async (data: MovieDTO) => {
+    if (mode === "ADD") {
+      await addMovie(data as Omit<Movie, "id">);
+    } else {
+      await saveMovie(data as Movie);
+    }
     dispatch(getAllMovies(lastParams));
   };
-
-  const saveMovie = async () => {
-    dispatch(updateMovie(formData as Movie));
-    close();
-  };
-
-  const submitCallback = async () => {
-    if (mode === "add") {
-      await addMovie();
-    } else {
-      await saveMovie();
-    }
-  };
   const resetCallback = () => {
-    setFormData(defaultFormData as MovieDTO<typeof mode>);
+    dispatch(moviesAction.setFormData(defaultFormData));
   };
 
   return (
     <Modal
       title={`${mode} movie`}
       visible={visible}
-      closeCallback={close}
-      footer={
-        <Footer
-          submitText="submit"
-          resetText="reset"
-          confirmCallback={() => submitCallback()}
-          cancelCallback={resetCallback}
-        />
+      closeCallback={() =>
+        dispatch(moviesAction.setVisible({ visible: false }))
       }
     >
-      <MovieForm formData={formData} onChange={onChange} />
+      <MovieForm
+        formData={formData}
+        submitCallback={submitCallback}
+        resetCallback={resetCallback}
+      />
     </Modal>
   );
 }

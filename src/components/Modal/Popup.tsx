@@ -13,6 +13,7 @@ interface PopupProps {
   type?: "success";
   title?: string;
   subTitle?: string;
+  footer?: React.ReactNode;
 }
 
 const IconMap = {
@@ -22,16 +23,17 @@ const IconMap = {
 function Popup({
   visible = false,
   close,
-  type = "success",
-  title = "Success",
+  type,
+  title = "SUCCESS",
   subTitle,
+  footer,
 }: PopupProps) {
   const Icon = IconMap[type];
   return (
     <Modal visible={visible} closeCallback={close} size="small">
       <div className={style["popup"]}>
         {/* <div className={style["popup__icon"]}> */}
-        <Icon />
+        {Icon && <Icon />}
         {/* </div> */}
         <div className={style["popup__content"]}>
           {title && <div className={style["popup__title"]}>{title}</div>}
@@ -39,6 +41,7 @@ function Popup({
             <div className={style["popup__sub-title"]}>{subTitle}</div>
           )}
         </div>
+        {footer && <div className={style["popup__footer"]}>{footer}</div>}
       </div>
     </Modal>
   );

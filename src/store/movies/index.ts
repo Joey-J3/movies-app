@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Movie } from "@/types";
-import { get, post, put } from "@/api";
+import { Movie, MovieDTO } from "@/types";
+import { del, get, post, put } from "@/api";
 import { getAllMoviesType } from "@/types/api";
+
+type MovieModalMode = "ADD" | "EDIT";
 
 interface MovieStoreState {
   movies: Array<Movie>;
@@ -9,7 +11,21 @@ interface MovieStoreState {
   genres: Array<string>;
   showMovieDetail: boolean;
   lastSearchParams: getAllMoviesType;
+  movieModal: {
+    formData: MovieDTO;
+    mode: MovieModalMode;
+    visible: boolean;
+  };
 }
+export const defaultFormData: MovieDTO = {
+  title: "",
+  release_date: "",
+  poster_path: "",
+  vote_average: "",
+  genres: [],
+  runtime: "",
+  overview: "",
+};
 
 const initialState: MovieStoreState = {
   movies: [],
@@ -17,6 +33,11 @@ const initialState: MovieStoreState = {
   genres: [],
   showMovieDetail: false,
   lastSearchParams: {},
+  movieModal: {
+    formData: defaultFormData,
+    mode: "ADD",
+    visible: false,
+  },
 };
 
 export const getAllMovies = createAsyncThunk(
@@ -48,6 +69,17 @@ export const createMovie = createAsyncThunk(
   }
 );
 
+export const deleteMovie = createAsyncThunk(
+  "movies/delete",
+  async (id: number, { rejectWithValue }) => {
+    try {
+      return (await del("/movies/:id", { id })).data;
+    } catch (error) {
+      rejectWithValue(error);
+    }
+  }
+);
+
 const movieSlice = createSlice({
   name: "movies",
   initialState,
@@ -64,20 +96,43 @@ const movieSlice = createSlice({
     setShowDetailMode: (state, action: PayloadAction<boolean>) => {
       state.showMovieDetail = action.payload;
     },
+    showMovieDetail: (state, action) => {
+      state.currentMovie = action.payload;
+      state.showMovieDetail = true;
+    },
+    setFormData: (state, action: PayloadAction<MovieDTO>) => {
+      state.movieModal.formData = action.payload;
+    },
+    setVisible: (
+      state,
+      action: PayloadAction<{ visible: boolean; mode?: MovieModalMode }>
+    ) => {
+      state.movieModal.visible = action.payload.visible;
+      state.movieModal.mode = action.payload.mode;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(getAllMovies.fulfilled, (state, action) => {
         state.movies = action.payload.data;
+        state.lastSearchParams = action.meta.arg;
       })
       .addCase(getAllGenres.fulfilled, (state, action) => {
         state.genres = action.payload;
       })
       .addCase(updateMovie.fulfilled, (state, action) => {
         state.currentMovie = action.payload;
+        state.movieModal.visible = false;
       })
       .addCase(createMovie.fulfilled, (state, action) => {
         state.currentMovie = action.payload;
+        state.movieModal.visible = false;
+      })
+      .addCase(deleteMovie.fulfilled, (state, action) => {
+        if (action.payload > 0 && state.currentMovie?.id === action.meta.arg) {
+          state.currentMovie = null;
+          state.showMovieDetail = false;
+        }
       });
   },
 });
