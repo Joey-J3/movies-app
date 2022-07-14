@@ -3,6 +3,9 @@ const HTMLWebpackPlugin = require("html-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+/* TODO: Currently NODE_ENV is undefined, need to fix
+   Why: dotenv don't config yet at this point
+ */
 const isDevelopment = process.env.NODE_ENV === "development";
 // const root = path.resolve(__dirname, '..')
 
@@ -83,7 +86,7 @@ module.exports = {
       // 与 webpackOptions.output 中的选项相似
       // 所有的选项都是可选的
       filename: isDevelopment ? "[name].css" : "[name].[contenthash].css",
-      chunkFilename: isDevelopment ? "[id].css" : "[id].[contenthash].js",
+      chunkFilename: isDevelopment ? "[id].css" : "[id].[contenthash].css",
     }),
     new HTMLWebpackPlugin({
       template: "./index.html",

@@ -3,26 +3,26 @@ import { OptionType } from "@/types";
 import tabsStyle from "./tabs.module.scss";
 
 interface TabsInterface {
-  activeTab: OptionType;
+  value: any;
   tabs: Array<OptionType>;
   onClickTab: (
-    tab: any,
+    value: string,
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
   // sortOptions?: Array<OptionType>;
 }
 
-function Tabs({ activeTab, tabs, onClickTab }: TabsInterface) {
+function Tabs({ value, tabs, onClickTab }: TabsInterface) {
   return (
     <div className={tabsStyle["tab"]}>
       {tabs.map((tab, i) => (
         <div
           key={i}
           className={`${tabsStyle["tab-item"]} text-uppercase ${
-            tab.value === activeTab.value && tabsStyle["tab-item--active"]
+            tab.value === value && tabsStyle["tab-item--active"]
           }`}
           tabIndex={1}
-          onClick={(e) => onClickTab(tab, e)}
+          onClick={(e) => onClickTab(tab.value, e)}
         >
           {tab.label}
         </div>

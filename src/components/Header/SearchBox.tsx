@@ -9,6 +9,11 @@ interface SearchBoxProps {
 }
 
 function SearchBox({ searchText, onChange, onSearch }: SearchBoxProps) {
+  function handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      onSearch();
+    }
+  }
   return (
     <>
       <h1 className={`${searchBoxStyle["search-box__title"]} text-uppercase`}>
@@ -20,6 +25,7 @@ function SearchBox({ searchText, onChange, onSearch }: SearchBoxProps) {
           placeholder="What do you want to watch?"
           tabIndex={1}
           value={searchText}
+          onKeyDown={handleKeyPress}
           onChange={onChange}
         />
         <div className={searchBoxStyle["search-button"]}>

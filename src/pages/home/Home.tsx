@@ -12,21 +12,27 @@ import {
 } from "@/store/movies/selector";
 import { moviesAction } from "@/store/movies";
 import MovieModal from "@/components/MovieModal";
-import Router from "@/router/Router";
-import { IRoute } from "@/router/config";
+import { useSearchParams } from "react-router-dom";
 
-function Home({ routes }: { routes: IRoute[] }) {
+function Home() {
   const showDetail = useAppSelector(selectIfShowDetail);
   const currentMovie = useAppSelector(selectCurrentMovie);
   const dispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
   const backToSearch = () => {
     dispatch(moviesAction.setShowDetailMode(false));
+    searchParams.delete("movie");
+    setSearchParams(searchParams);
   };
   return (
     <div className={homeStyle.home}>
       <MovieModal />
       <ErrorBoundary>
-        <Router routes={routes} />
+        {showDetail ? (
+          <MovieDetail movie={currentMovie} onClickSearch={backToSearch} />
+        ) : (
+          <Header />
+        )}
       </ErrorBoundary>
       <div className={homeStyle.gap}></div>
       <ErrorBoundary>

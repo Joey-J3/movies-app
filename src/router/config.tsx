@@ -54,4 +54,9 @@ export const routes: IRoute[] = [
     component: lazy(() => import("@/pages/home/Home")),
     routes: routeSubRoutes,
   },
+  {
+    path: "*",
+    private: false,
+    component: lazy(() => import("@/components/NoMatch")),
+  },
 ].map((item) => ({ ...defaultOptions, ...item }));
