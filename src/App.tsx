@@ -1,17 +1,10 @@
 import React from "react";
-import Home from "./pages/home/Home";
-import { Provider } from "react-redux";
 import "./app.scss";
-import { store } from "./store";
+import Router from "./router/Router";
+import { routes } from "./router/config";
 
 function App() {
-  return (
-    <div className="app">
-      <Provider store={store}>
-        <Home />
-      </Provider>
-    </div>
-  );
+  return <Router routes={routes} />;
 }
 
 export default App;

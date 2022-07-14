@@ -12,8 +12,10 @@ import {
 } from "@/store/movies/selector";
 import { moviesAction } from "@/store/movies";
 import MovieModal from "@/components/MovieModal";
+import Router from "@/router/Router";
+import { IRoute } from "@/router/config";
 
-function Home() {
+function Home({ routes }: { routes: IRoute[] }) {
   const showDetail = useAppSelector(selectIfShowDetail);
   const currentMovie = useAppSelector(selectCurrentMovie);
   const dispatch = useAppDispatch();
@@ -24,11 +26,7 @@ function Home() {
     <div className={homeStyle.home}>
       <MovieModal />
       <ErrorBoundary>
-        {showDetail ? (
-          <MovieDetail movie={currentMovie} onClickSearch={backToSearch} />
-        ) : (
-          <Header />
-        )}
+        <Router routes={routes} />
       </ErrorBoundary>
       <div className={homeStyle.gap}></div>
       <ErrorBoundary>
