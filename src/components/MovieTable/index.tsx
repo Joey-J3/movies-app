@@ -13,6 +13,7 @@ import {
 } from "@/store/movies";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import Button from "../Button";
+import { useSearchParams } from "react-router-dom";
 // const tabsName = [
 //   {
 //     label: "All",
@@ -74,15 +75,16 @@ function MovieTable() {
     [genres]
   );
 
-  const [curSortType, setcurSortType] = useState<string>(sortType[0].value);
-  const [curTab, setCurTab] = useState(tabs[0]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const curTab = searchParams.get("genre");
+  const curSortType = searchParams.get("sortBy");
   useEffect(() => {
     // TODO: add params
     dispatch(
       getAllMovies({
         sortBy: curSortType,
         sortOrder: "asc",
-        filter: curTab.value,
+        filter: curTab,
       })
     );
     dispatch(getAllGenres());
@@ -103,23 +105,30 @@ function MovieTable() {
       setShowDeleteModal(true);
     }
   };
-
-  const onClickTab = (tab: OptionType) => {
-    setCurTab(tab);
+  const changeSearchParams = (name: string, value: string) => {
+    searchParams.set(name, value);
+    setSearchParams(searchParams);
   };
   const onClickMovieCard = (movie: Movie) => {
     dispatch(moviesAction.showMovieDetail(movie));
+    changeSearchParams("movie", String(movie.id));
   };
 
   return (
     <div className={tableStyle["movie-table"]}>
       <div className={tableStyle["movie-table__tab__wrapper"]}>
-        <Tabs activeTab={curTab} tabs={tabs} onClickTab={onClickTab} />
+        <Tabs
+          value={curTab}
+          tabs={tabs}
+          onClickTab={(value) => changeSearchParams("genre", value)}
+        />
         <div className={tableStyle["filter"]}>
           <p className="text-uppercase">sort by</p>
           <Dropdown
             value={curSortType}
-            onChange={(o) => setcurSortType((o as OptionType).value as string)}
+            onChange={(o) =>
+              changeSearchParams("sortBy", (o as OptionType).value)
+            }
             options={sortType}
             className={tableStyle["filter__selector"]}
             placeholder={"Select sort type"}
@@ -132,10 +141,10 @@ function MovieTable() {
       </div>
       {/* movie-cards list */}
       <div className={tableStyle["movie-table__content"]}>
-        {movies.map((movie: Movie) => (
+        {movies.map((movie: Movie, i) => (
           <div
             className={tableStyle["card-item"]}
-            key={movie.title}
+            key={movie.title + i}
             onClick={() => onClickMovieCard(movie)}
           >
             <MovicCard
