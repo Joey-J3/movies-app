@@ -24,7 +24,14 @@ export const DropDownListItem = ({
 );
 
 function DropDownList({ children }: { children: React.ReactNode }) {
-  return <ul className={dropdownStyle["drop-down__list"]}>{children}</ul>;
+  return (
+    <ul
+      data-testid="drop-down-list"
+      className={dropdownStyle["drop-down__list"]}
+    >
+      {children}
+    </ul>
+  );
 }
 
 export default DropDownList;

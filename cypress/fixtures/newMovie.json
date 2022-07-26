@@ -1,0 +1,9 @@
+{
+  "title": "The Revengers",
+  "release_date": "2022-07-18",
+  "poster_path": "https://image.tmdb.org/t/p/w500/kOVEVeg59E0wsnXmF9nrh6OmWII.jpg",
+  "vote_average": "7.2",
+  "runtime": "121",
+  "overview": "overview testing",
+  "genres": ["Romance", "Animation"]
+}

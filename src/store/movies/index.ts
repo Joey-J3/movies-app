@@ -1,21 +1,29 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Movie, MovieDTO } from "@/types";
-import { del, get, post, put } from "@/api";
 import { getAllMoviesType } from "@/types/api";
+import {
+  createMovie,
+  deleteMovie,
+  getAllGenres,
+  getAllMovies,
+  updateMovie,
+} from "./thunks";
 
-type MovieModalMode = "ADD" | "EDIT";
+export type MovieModalMode = "ADD" | "EDIT";
 
-interface MovieStoreState {
+export interface IMovieModal {
+  formData: MovieDTO;
+  mode: MovieModalMode;
+  visible: boolean;
+}
+
+export interface MovieStoreState {
   movies: Array<Movie>;
   currentMovie: Movie;
   genres: Array<string>;
   showMovieDetail: boolean;
   lastSearchParams: getAllMoviesType;
-  movieModal: {
-    formData: MovieDTO;
-    mode: MovieModalMode;
-    visible: boolean;
-  };
+  movieModal: IMovieModal;
 }
 export const defaultFormData: MovieDTO = {
   title: "",
@@ -27,7 +35,7 @@ export const defaultFormData: MovieDTO = {
   overview: "",
 };
 
-const initialState: MovieStoreState = {
+export const initialState: MovieStoreState = {
   movies: [],
   currentMovie: null,
   genres: [],
@@ -39,46 +47,6 @@ const initialState: MovieStoreState = {
     visible: false,
   },
 };
-
-export const getAllMovies = createAsyncThunk(
-  "movies/getAll",
-  async (params?: getAllMoviesType) => {
-    const response = await get("/movies", params);
-    return response.data;
-  }
-);
-
-export const getAllGenres = createAsyncThunk("movies/genres/all", async () => {
-  const response = await get("/movies/genres/all");
-  return response.data.genres;
-});
-
-export const updateMovie = createAsyncThunk(
-  "movies/update",
-  async (data: Movie) => {
-    const response = await put("/movies", data);
-    return response.data;
-  }
-);
-
-export const createMovie = createAsyncThunk(
-  "movies/create",
-  async (data: Omit<Movie, "id">) => {
-    const response = await post("/movies", data);
-    return response.data;
-  }
-);
-
-export const deleteMovie = createAsyncThunk(
-  "movies/delete",
-  async (id: number, { rejectWithValue }) => {
-    try {
-      return (await del("/movies/:id", { id })).data;
-    } catch (error) {
-      rejectWithValue(error);
-    }
-  }
-);
 
 const movieSlice = createSlice({
   name: "movies",

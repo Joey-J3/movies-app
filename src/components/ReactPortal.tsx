@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 interface PortalInterface {
@@ -7,7 +7,18 @@ interface PortalInterface {
 }
 
 function ReactPortal({ wrapperId = "app", children }: PortalInterface) {
-  return createPortal(children, document.getElementById(wrapperId));
+  const [mount, setMount] = useState(false);
+  useEffect(() => {
+    setMount(true);
+  }, []);
+
+  return mount
+    ? createPortal(
+        children,
+        document.getElementById(wrapperId) ||
+          document.getElementsByTagName("body")[0]
+      )
+    : null;
 }
 
 export default ReactPortal;
