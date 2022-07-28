@@ -1,3 +1,5 @@
+import Home from "@/pages/home/Home";
+import { AppStore } from "@/store";
 import React, {
   ComponentType,
   lazy,
@@ -7,13 +9,13 @@ import React, {
 
 export interface IRoute {
   // Path, like in basic prop
-  path?: string;
+  path: string;
   // Exact, like in basic prop
   index?: boolean;
   // Preloader for lazy loading
   fallback: NonNullable<ReactNode> | null;
   // Lazy Loaded component
-  component?: LazyExoticComponent<ComponentType<any>>;
+  component?: LazyExoticComponent<ComponentType<any>> | React.FC;
   // normal component
   element?: ReactNode;
   // Sub routes
@@ -22,6 +24,8 @@ export interface IRoute {
   redirect?: string;
   // If router is private, this is going to be true
   private?: boolean;
+  // ssr pre load data
+  loadData?: (store: AppStore, ...params: any[]) => Promise<any>;
 }
 
 const Fallback = () => <div>Loading...</div>;
@@ -35,6 +39,7 @@ const defaultOptions = {
 const routeSubRoutes: IRoute[] = [
   {
     index: true,
+    path: "/",
     component: lazy(() => import("@/components/Header")),
   },
   {
@@ -51,8 +56,9 @@ export const routes: IRoute[] = [
   {
     path: "search",
     index: true,
-    component: lazy(() => import("@/pages/home/Home")),
+    component: Home,
     routes: routeSubRoutes,
+    loadData: Home.loadData,
   },
   {
     path: "*",

@@ -1,40 +1,47 @@
-const path = require("path");
-const HTMLWebpackPlugin = require("html-webpack-plugin");
+// const HtmlWebpackPlugin = require("html-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
-/* TODO: Currently NODE_ENV is undefined, need to fix
-   Why: dotenv don't config yet at this point
- */
+const { resolve } = require("path");
+// const nodeExternals = require("webpack-node-externals");
 const isDevelopment = process.env.NODE_ENV === "development";
-// const root = path.resolve(__dirname, '..')
+
+const entry = resolve(__dirname, "../src/renderer.tsx");
 
 module.exports = {
-  entry: "./src/index.tsx",
-  output: {
-    path: path.join(__dirname, "/dist"),
-    filename: "index_bundle.js",
-    assetModuleFilename: "static/[contenthash][ext][query]",
-  },
+  name: "server",
+  mode: process.env.NODE_ENV,
+  target: "node",
   resolve: {
     extensions: [".tsx", ".ts", ".js", "scss"],
     alias: {
-      "@": path.resolve("src"),
+      "@": resolve("src"),
     },
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        exclude: /node_module/,
-        use: {
-          loader: "babel-loader",
-        },
+        exclude: /node_modules/,
+        loader: "babel-loader",
+        // options: {
+        //   presets: ["@babel/preset-react", "@babel/preset-env"],
+        //   plugins: [
+        //     [
+        //       "@babel/plugin-transform-runtime",
+        //       {
+        //         absoluteRuntime: false,
+        //         corejs: false,
+        //         helpers: true,
+        //         regenerator: true,
+        //         version: "7.0.0-beta.0",
+        //       },
+        //     ],
+        //   ],
+        // },
       },
       {
         test: /\.module\.s(a|c)ss$/,
         use: [
-          isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+          "isomorphic-style-loader",
           {
             loader: "css-loader",
             options: {
@@ -55,7 +62,7 @@ module.exports = {
         exclude: /\.module\.s(a|c)ss$/,
         use: [
           // 在开发过程中回退到 style-loader
-          isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+          "isomorphic-style-loader",
           "css-loader",
           {
             loader: "sass-loader",
@@ -82,17 +89,14 @@ module.exports = {
     ],
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      // 与 webpackOptions.output 中的选项相似
-      // 所有的选项都是可选的
-      filename: isDevelopment ? "[name].css" : "[name].[contenthash].css",
-      chunkFilename: isDevelopment ? "[id].css" : "[id].[contenthash].css",
-    }),
-    new HTMLWebpackPlugin({
-      template: "./index.html",
-    }),
     new Dotenv({
-      path: "./env/base.env",
+      path: resolve(__dirname, "../env/base.env"),
     }),
   ],
+  entry,
+  output: {
+    filename: "serverRenderer.js",
+    path: resolve(__dirname, "../build"),
+    libraryTarget: "commonjs2",
+  },
 };

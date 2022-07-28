@@ -48,7 +48,7 @@ function MovieDetail({ movie, onClickSearch }: MovieDetailProps) {
             className={movieDetailStyle["movie-detail__publish-year__duration"]}
           >
             {release_date && <span>{release_date}</span>}
-            <span>{movieDuration(runtime)}</span>
+            <span>{movieDuration(Number(runtime))}</span>
           </div>
           <div className={movieDetailStyle["movie-detail__desc"]}>
             {overview}

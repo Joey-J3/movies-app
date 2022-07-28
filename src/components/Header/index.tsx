@@ -34,18 +34,16 @@ function Header() {
       <div className={headerStyle.logo}>
         <img src={logo} />
       </div>
-      <ErrorBoundary>
-        <div className={headerStyle["header__add--button"]}>
-          <AddButton onClick={onClickAdd} />
-        </div>
-        <div className={headerStyle["header__search-box"]}>
-          <SearchBox
-            searchText={searchText}
-            onChange={onChange}
-            onSearch={onSearch}
-          />
-        </div>
-      </ErrorBoundary>
+      <div className={headerStyle["header__add--button"]}>
+        <AddButton onClick={onClickAdd} />
+      </div>
+      <div className={headerStyle["header__search-box"]}>
+        <SearchBox
+          searchText={searchText}
+          onChange={onChange}
+          onSearch={onSearch}
+        />
+      </div>
     </div>
   );
 }

@@ -10,9 +10,11 @@ import {
   selectCurrentMovie,
   selectIfShowDetail,
 } from "@/store/movies/selector";
-import { moviesAction } from "@/store/movies";
+import { getAllGenres, getAllMovies, moviesAction } from "@/store/movies";
 import MovieModal from "@/components/MovieModal";
 import { useSearchParams } from "react-router-dom";
+import { AppStore } from "@/store";
+import { getAllMoviesType } from "@/types/api";
 
 function Home() {
   const showDetail = useAppSelector(selectIfShowDetail);
@@ -27,17 +29,13 @@ function Home() {
   return (
     <div className={homeStyle.home}>
       <MovieModal />
-      <ErrorBoundary>
-        {showDetail ? (
-          <MovieDetail movie={currentMovie} onClickSearch={backToSearch} />
-        ) : (
-          <Header />
-        )}
-      </ErrorBoundary>
+      {showDetail ? (
+        <MovieDetail movie={currentMovie} onClickSearch={backToSearch} />
+      ) : (
+        <Header />
+      )}
       <div className={homeStyle.gap}></div>
-      <ErrorBoundary>
-        <MovieTable />
-      </ErrorBoundary>
+      <MovieTable />
       <footer>
         <div className={homeStyle.footer}>
           <img src={logo} alt="netflex roulette" />
@@ -46,5 +44,12 @@ function Home() {
     </div>
   );
 }
+
+Home.loadData = (store: AppStore, params?: getAllMoviesType) => {
+  return Promise.all([
+    store.dispatch(getAllMovies(params)),
+    store.dispatch(getAllGenres()),
+  ]);
+};
 
 export default Home;
