@@ -1,6 +1,5 @@
 import React from "react";
 import logo from "../../../static/netflixroulette.svg";
-import ErrorBoundary from "../ErrorBoundary";
 import AddButton from "./AddButton";
 import SearchBox from "./SearchBox";
 import headerStyle from "./styles/header.module.scss";
@@ -34,18 +33,16 @@ function Header() {
       <div className={headerStyle.logo}>
         <img src={logo} />
       </div>
-      <ErrorBoundary>
-        <div className={headerStyle["header__add--button"]}>
-          <AddButton onClick={onClickAdd} />
-        </div>
-        <div className={headerStyle["header__search-box"]}>
-          <SearchBox
-            searchText={searchText}
-            onChange={onChange}
-            onSearch={onSearch}
-          />
-        </div>
-      </ErrorBoundary>
+      <div className={headerStyle["header__add--button"]}>
+        <AddButton onClick={onClickAdd} />
+      </div>
+      <div className={headerStyle["header__search-box"]}>
+        <SearchBox
+          searchText={searchText}
+          onChange={onChange}
+          onSearch={onSearch}
+        />
+      </div>
     </div>
   );
 }

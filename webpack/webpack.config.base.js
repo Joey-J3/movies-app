@@ -1,32 +1,23 @@
-const path = require("path");
-const HTMLWebpackPlugin = require("html-webpack-plugin");
+const { resolve } = require("path");
 const Dotenv = require("dotenv-webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 /* TODO: Currently NODE_ENV is undefined, need to fix
    Why: dotenv don't config yet at this point
  */
 const isDevelopment = process.env.NODE_ENV === "development";
-// const root = path.resolve(__dirname, '..')
 
 module.exports = {
-  entry: "./src/index.tsx",
-  output: {
-    path: path.join(__dirname, "/dist"),
-    filename: "index_bundle.js",
-    assetModuleFilename: "static/[contenthash][ext][query]",
-  },
   resolve: {
     extensions: [".tsx", ".ts", ".js", "scss"],
     alias: {
-      "@": path.resolve("src"),
+      "@": resolve("src"),
     },
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        exclude: /node_module/,
+        exclude: /node_modules/,
         use: {
           loader: "babel-loader",
         },
@@ -34,7 +25,7 @@ module.exports = {
       {
         test: /\.module\.s(a|c)ss$/,
         use: [
-          isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+          "style-loader",
           {
             loader: "css-loader",
             options: {
@@ -55,7 +46,7 @@ module.exports = {
         exclude: /\.module\.s(a|c)ss$/,
         use: [
           // 在开发过程中回退到 style-loader
-          isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+          "style-loader",
           "css-loader",
           {
             loader: "sass-loader",
@@ -82,17 +73,8 @@ module.exports = {
     ],
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      // 与 webpackOptions.output 中的选项相似
-      // 所有的选项都是可选的
-      filename: isDevelopment ? "[name].css" : "[name].[contenthash].css",
-      chunkFilename: isDevelopment ? "[id].css" : "[id].[contenthash].css",
-    }),
-    new HTMLWebpackPlugin({
-      template: "./index.html",
-    }),
     new Dotenv({
-      path: "./env/base.env",
+      path: resolve(__dirname, "../env/base.env"),
     }),
   ],
 };

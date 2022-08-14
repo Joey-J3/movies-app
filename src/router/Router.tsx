@@ -7,7 +7,7 @@ interface IProps {
   routes: IRoute[];
 }
 
-const Router: React.FC<IProps> = ({ routes }: IProps) => {
+const Routers: React.FC<IProps> = ({ routes }: IProps) => {
   return (
     <Routes>
       {routes &&
@@ -23,4 +23,4 @@ const Router: React.FC<IProps> = ({ routes }: IProps) => {
   );
 };
 
-export default Router;
+export default Routers;

@@ -4,7 +4,7 @@ import { IRoute } from "./config";
 
 export default function RouteWithSuspend(route: IRoute) {
   return (
-    <Suspense fallback={route.fallback}>
+    <>
       {route.redirect ? (
         <Navigate to={route.redirect} />
       ) : route.component ? (
@@ -12,6 +12,6 @@ export default function RouteWithSuspend(route: IRoute) {
       ) : (
         route.element
       )}
-    </Suspense>
+    </>
   );
 }

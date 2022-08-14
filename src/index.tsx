@@ -1,20 +1,18 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
-import { Provider } from "react-redux";
+import { hydrateRoot } from "react-dom/client";
 import { HashRouter as Router } from "react-router-dom";
 import App from "./App";
-import { store } from "./store";
+import createStore from "./store";
 
 // ReactDom.render(<App />, document.getElementById("app"))
+const store = createStore(window.__PRELOADED_STATE__);
 
-const root = createRoot(document.getElementById("app"));
-root.render(
+delete window.__PRELOADED_STATE__;
+
+hydrateRoot(
+  document.getElementById("app"),
   <React.StrictMode>
-    <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
-    </Provider>
+    <App store={store} Router={Router} />
   </React.StrictMode>
 );
 

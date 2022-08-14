@@ -13,10 +13,10 @@ export const useToggle = (initialValue = false) => {
 
 export const useUrlParams = (
   defaultInit?: URLSearchParamsInit
-): [URLSearchParams, (name: string, value: string) => void] => {
+): [URLSearchParams, (name: string, value?: string) => void] => {
   const [searchParams, setSearchParams] = useSearchParams(defaultInit);
 
-  const setParams = (name: string, value: string) => {
+  const setParams = (name: string, value?: string) => {
     if (!value) {
       searchParams.delete(name);
     } else {

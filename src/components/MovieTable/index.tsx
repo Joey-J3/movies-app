@@ -70,7 +70,7 @@ function MovieTable() {
     () =>
       [
         { label: "All", value: "" },
-        ...genres.map((g) => ({ label: g, value: g })),
+        ...(genres || []).map((g) => ({ label: g, value: g })),
       ] as OptionType[],
     [genres]
   );
@@ -141,7 +141,7 @@ function MovieTable() {
       </div>
       {/* movie-cards list */}
       <div className={tableStyle["movie-table__content"]}>
-        {movies.map((movie: Movie, i) => (
+        {(movies || []).map((movie: Movie, i) => (
           <div
             className={tableStyle["card-item"]}
             key={movie.title + i}
