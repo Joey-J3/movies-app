@@ -5,8 +5,9 @@ import AddButton from "./AddButton";
 import SearchBox from "./SearchBox";
 import headerStyle from "./styles/header.module.scss";
 import { useAppDispatch, useAppSelector, useUrlParams } from "@/hooks";
-import { getAllMovies, moviesAction } from "@/store/movies";
+import { moviesAction } from "@/store/movies";
 import { selectLastParams } from "@/store/movies/selector";
+import { getAllMovies } from "@/store/movies/thunks";
 
 function Header() {
   const [searchParams, setSearchParams] = useUrlParams();
@@ -35,7 +36,10 @@ function Header() {
         <img src={logo} />
       </div>
       <ErrorBoundary>
-        <div className={headerStyle["header__add--button"]}>
+        <div
+          data-testid="add-movie-button"
+          className={headerStyle["header__add--button"]}
+        >
           <AddButton onClick={onClickAdd} />
         </div>
         <div className={headerStyle["header__search-box"]}>

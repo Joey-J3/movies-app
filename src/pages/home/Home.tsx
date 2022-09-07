@@ -11,10 +11,11 @@ import {
   selectIfShowDetail,
 } from "@/store/movies/selector";
 import { moviesAction } from "@/store/movies";
-import MovieModal from "@/components/MovieModal";
+import MovieModal, { useMovieModalState } from "@/components/MovieModal";
 import { useSearchParams } from "react-router-dom";
 
 function Home() {
+  const movieProps = useMovieModalState();
   const showDetail = useAppSelector(selectIfShowDetail);
   const currentMovie = useAppSelector(selectCurrentMovie);
   const dispatch = useAppDispatch();
@@ -26,7 +27,7 @@ function Home() {
   };
   return (
     <div className={homeStyle.home}>
-      <MovieModal />
+      <MovieModal {...movieProps} />
       <ErrorBoundary>
         {showDetail ? (
           <MovieDetail movie={currentMovie} onClickSearch={backToSearch} />

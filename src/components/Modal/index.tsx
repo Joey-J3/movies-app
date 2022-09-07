@@ -30,7 +30,7 @@ function Modal({
   return (
     visible && (
       <ReactPortal>
-        <div className={modalStyle.modal}>
+        <div data-testid="modal" className={modalStyle.modal}>
           <div
             className={modalStyle["modal__wrapper"]}
             style={{ width: sizeMap[size] }}

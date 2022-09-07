@@ -22,6 +22,7 @@ function Input({
     <span className={inputStyle["input-field"]}>
       {type === "input" ? (
         <input
+          id={name}
           name={name}
           value={value}
           onChange={(e) => onChange(e as React.ChangeEvent<HTMLInputElement>)}
@@ -31,6 +32,7 @@ function Input({
         />
       ) : type === "textarea" ? (
         <textarea
+          id={name}
           name={name}
           value={value}
           onChange={(e) =>

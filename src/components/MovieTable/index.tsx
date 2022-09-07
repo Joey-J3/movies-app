@@ -5,15 +5,11 @@ import { Movie, OptionType } from "@/types";
 import Popup from "../Modal/Popup";
 import Dropdown from "../Dropdown";
 import tableStyle from "./table.module.scss";
-import {
-  deleteMovie,
-  getAllGenres,
-  getAllMovies,
-  moviesAction,
-} from "@/store/movies";
+import { moviesAction } from "@/store/movies";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import Button from "../Button";
 import { useSearchParams } from "react-router-dom";
+import { deleteMovie, getAllGenres, getAllMovies } from "@/store/movies/thunks";
 // const tabsName = [
 //   {
 //     label: "All",

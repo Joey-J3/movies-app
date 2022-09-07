@@ -9,8 +9,9 @@ import Input from "../Input";
 import Footer from "../Modal/Footer";
 
 import movieFormStyle from "./movie-form.module.scss";
+import { useMovieFormik } from "./utils";
 
-interface MovieFormInterface {
+export interface MovieFormInterface {
   formData: MovieDTO;
   // onChange: (value: any, fieldName: string) => any;
   submitCallback: (data: MovieDTO) => any;
@@ -23,40 +24,6 @@ function MovieForm({
   resetCallback,
 }: MovieFormInterface) {
   const genresOption = useAppSelector(selectGenres);
-  const validationSchema = yup.object().shape({
-    title: yup.string().required("Title is required!"),
-    release_date: yup
-      .date()
-      .max(new Date(), "Please select a valid release date"),
-    poster_path: yup
-      .string()
-      .url("Please input valid url")
-      .required("Please inpute preview image uri"),
-    vote_average: yup
-      .number()
-      .nullable(true)
-      .positive("Please input a positive number")
-      .max(10, "Cannot bigger than 10"),
-    genres: yup.array().min(1, "Please select at least one genre type"),
-    runtime: yup
-      .number()
-      .nullable(true)
-      .integer("Please input a integer number")
-      .positive("Please input a positive number"),
-    overview: yup
-      .string()
-      .max(500, "Cannot type more than 500 character")
-      .required("Please type overview"),
-  });
-  const formik = useFormik({
-    initialValues: formData,
-    validationSchema,
-    enableReinitialize: true,
-    onSubmit: (values) => {
-      submitCallback(values);
-    },
-  });
-
   const {
     errors,
     values,
@@ -65,17 +32,24 @@ function MovieForm({
     handleReset,
     touched,
     setFieldValue,
-  } = formik;
+  } = useMovieFormik({
+    formData,
+    submitCallback,
+    resetCallback,
+  });
 
   return (
     <form
       className={movieFormStyle["movie-form"]}
       onSubmit={handleSubmit}
       onReset={handleReset}
+      data-testid={"movie-modal-form"}
     >
       <div className={movieFormStyle["form-row"]}>
         <div className={movieFormStyle["row-2"]}>
-          <label className={movieFormStyle["form-label"]}>TITLE</label>
+          <label className={movieFormStyle["form-label"]} htmlFor="title">
+            TITLE
+          </label>
           <Input
             name="title"
             value={values.title}
@@ -87,7 +61,12 @@ function MovieForm({
           </p>
         </div>
         <div className={movieFormStyle["row-1"]}>
-          <label className={movieFormStyle["form-label"]}>RELEASE DATE</label>
+          <label
+            className={movieFormStyle["form-label"]}
+            htmlFor="release_date"
+          >
+            RELEASE DATE
+          </label>
           <Input
             name="release_date"
             inputType={"date"}
@@ -102,7 +81,9 @@ function MovieForm({
       </div>
       <div className={movieFormStyle["form-row"]}>
         <div className={movieFormStyle["row-2"]}>
-          <label className={movieFormStyle["form-label"]}>MOVIE URL</label>
+          <label className={movieFormStyle["form-label"]} htmlFor="poster_path">
+            MOVIE URL
+          </label>
           <Input
             name="poster_path"
             inputType={"url"}
@@ -115,7 +96,12 @@ function MovieForm({
           </p>
         </div>
         <div className={movieFormStyle["row-1"]}>
-          <label className={movieFormStyle["form-label"]}>RATING</label>
+          <label
+            className={movieFormStyle["form-label"]}
+            htmlFor="vote_average"
+          >
+            RATING
+          </label>
           <Input
             name="vote_average"
             value={values.vote_average}
@@ -149,7 +135,9 @@ function MovieForm({
           </p>
         </div>
         <div className={movieFormStyle["row-1"]}>
-          <label className={movieFormStyle["form-label"]}>RUNTIME</label>
+          <label className={movieFormStyle["form-label"]} htmlFor="runtime">
+            RUNTIME
+          </label>
           <Input
             name="runtime"
             inputType={"number"}
@@ -163,7 +151,9 @@ function MovieForm({
         </div>
       </div>
       <div>
-        <label className={movieFormStyle["form-label"]}>OVERVIEW</label>
+        <label className={movieFormStyle["form-label"]} htmlFor="overview">
+          OVERVIEW
+        </label>
         <Input
           type="textarea"
           placeholder="Movie description"
@@ -175,11 +165,7 @@ function MovieForm({
           {(touched.overview && errors.overview) || ""}
         </p>
       </div>
-      <Footer
-        submitText="submit"
-        resetText="reset"
-        cancelCallback={resetCallback}
-      />
+      <Footer submitText="submit" resetText="reset" />
     </form>
   );
 }
