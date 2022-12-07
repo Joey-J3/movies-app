@@ -46,6 +46,7 @@ module.exports = {
             loader: "css-loader",
             options: {
               modules: true,
+              esModule: false,
               sourceMap: isDevelopment,
             },
           },

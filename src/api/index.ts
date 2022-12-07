@@ -1,12 +1,13 @@
 import { API, APIResponse } from "@/types/api";
 import axios, { AxiosRequestConfig } from "axios";
 
-const apiPreFix = process.env.API_PREFIX;
+const baseUrl = process.env.LOCAL_SERVER_BASE_URL;
+const port = process.env.LOCAL_SERVER_BASE_PORT;
 
 const defaultConfig = {};
 
 const http = axios.create({
-  baseURL: apiPreFix,
+  baseURL: `${baseUrl}:${port}`,
 });
 
 export function get<T extends keyof API["get"]>(

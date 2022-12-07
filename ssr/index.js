@@ -18,12 +18,12 @@ if (process.env.NODE_ENV === "development") {
   );
   app.use(
     webpackHotMiddleware(
-      compiler.compilers.find((c) => c.name === "client")
-      // {
-      //   log: console.log,
-      //   path: "/__webpack_hmr",
-      //   heartbeat: 10 * 1000,
-      // }
+      compiler.compilers.find((c) => c.name === "client"),
+      {
+        log: console.log,
+        path: "/__webpack_hmr",
+        heartbeat: 10 * 1000,
+      }
     )
   );
   app.use(webpackHotServerMiddleware(compiler));

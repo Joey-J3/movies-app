@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run dev\" \"npm run start -C ./server\"",
-    "dev:*": "webpack-dev-server --mode development --config ./webpack",
+    "dev:all": "webpack-dev-server --mode development --config ./webpack",
     "dev:client": "webpack-dev-server --mode development --config ./webpack/webpack.config.dev.js",
     "dev:ssr:server": "cross-env NODE_ENV=development node ./ssr/index.js",
     "test": "npm run test",

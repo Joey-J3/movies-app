@@ -57,7 +57,7 @@ export const routes: IRoute[] = [
     redirect: "/search",
   },
   {
-    path: "search",
+    path: "/search",
     index: true,
     component: Home,
     routes: routeSubRoutes,

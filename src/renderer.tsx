@@ -1,5 +1,4 @@
 import path from "path";
-import qs from "qs";
 import React from "react";
 import { Request, Response } from "express";
 import { matchPath } from "react-router-dom";
@@ -32,7 +31,7 @@ function renderHTML(html: string, preloadedState: RootState) {
               preloadedState
             ).replace(/</g, "\\u003c")}
           </script>
-
+        <script src="/index.js"></script>
       </body>
     </html>
   `;
@@ -41,7 +40,6 @@ function renderHTML(html: string, preloadedState: RootState) {
 export default function serverRenderer() {
   return (req: Request, res: Response) => {
     const store = createStore();
-    
     const promises = routes.reduce<Promise<any>[]>((acc, route) => {
       if (matchPath(req.url, route.path) && route.component && route.loadData) {
         acc.push(route.loadData(store, req.query));
@@ -67,7 +65,7 @@ export default function serverRenderer() {
         return;
       }
       const preloadedState = store.getState();
-      const string = renderHTML(htmlString, preloadedState)
+      const string = renderHTML(htmlString, preloadedState);
       res.send(string);
     });
   };
